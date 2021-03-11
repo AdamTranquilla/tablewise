@@ -17,14 +17,14 @@ const categories = [
 ];
 
 const items = [
-  { id: 1, name: "Beesechurger", categoryId: 1 },
-  { id: 2, name: "Pizza", categoryId: 1 },
-  { id: 3, name: "Taco", categoryId: 1 },
-  { id: 4, name: "Garden Salad", categoryId: 2 },
-  { id: 5, name: "Fries", categoryId: 2 },
-  { id: 6, name: "Wings", categoryId: 2 },
-  { id: 7, name: "Tap water", categoryId: 3 },
-  { id: 8, name: "Beer", categoryId: 3 },
+  { id: 1, name: "Beesechurger", price: 1250, categoryId: 1 },
+  { id: 2, name: "Pizza", price: 2200, categoryId: 1 },
+  { id: 3, name: "Tacos", price: 1500, categoryId: 1 },
+  { id: 4, name: "Garden Salad", price: 975, categoryId: 2 },
+  { id: 5, name: "Fries", price: 550, categoryId: 2 },
+  { id: 6, name: "Wings", price: 1200, categoryId: 2 },
+  { id: 7, name: "Tap water", price: 000, categoryId: 3 },
+  { id: 8, name: "Beer", price: 450, categoryId: 3 },
 ];
 
 const itemType = new GraphQLObjectType({
@@ -54,7 +54,6 @@ const categoryType = new GraphQLObjectType({
       type: GraphQLList(itemType),
       resolve: (category) => {
         return items.filter((item) => item.categoryId === category.id);
-        // use filter, not find bc there are many items per category
       },
     },
   }),
@@ -94,8 +93,48 @@ const RootQueryType = new GraphQLObjectType({
   }),
 });
 
+const RootMutationType = new GraphQLObjectType({
+  name: "Mutation",
+  description: "Root Mutation",
+  fields: () => ({
+    addItem: {
+      type: itemType,
+      description: "Add a Item",
+      args: {
+        name: { type: GraphQLNonNull(GraphQLString) },
+        categoryId: { type: GraphQLNonNull(GraphQLInt) },
+      },
+      resolve: (parent, args) => {
+        const item = {
+          id: items.length + 1,
+          name: args.name,
+          categoryId: args.categoryId,
+        };
+        items.push(item);
+        return item;
+      },
+    },
+    addCategory: {
+      type: categoryType,
+      description: "Add a Category",
+      args: {
+        name: { type: GraphQLNonNull(GraphQLString) },
+      },
+      resolve: (parent, args) => {
+        const category = {
+          id: categories.length + 1,
+          name: args.name,
+        };
+        categories.push(category);
+        return category;
+      },
+    },
+  }),
+});
+
 const schema = new GraphQLSchema({
   query: RootQueryType,
+  mutation: RootMutationType,
 });
 
 app.use(
