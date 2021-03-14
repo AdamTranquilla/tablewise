@@ -8,20 +8,28 @@ const {
   GraphQLInt,
   GraphQLFloat,
   GraphQLNonNull,
-  GraphQLInputObjectType,
 } = require("graphql");
+
 const app = express();
-const {
-  items,
-  categories,
-  options,
-  orders,
-  orderItems,
-  orderOptions,
-} = require("./db");
 const _ = require("lodash");
 const { v4: uuidv4 } = require("uuid");
 const { inputItemType } = require("./inputTypes.js");
+const mongoose = require("mongoose");
+require("dotenv").config();
+
+console.log("mongodb://localhost:27017/development");
+
+mongoose.connect("mongodb://localhost:27017/development", {
+  useNewUrlParser: true,
+  useUnifiedTopology: true,
+  useCreateIndex: true,
+});
+
+mongoose.connection.once("open", () => {
+  console.log("Connected to Mongo DB");
+});
+
+const { items, categories, options, orders } = require("./db");
 
 const itemType = new GraphQLObjectType({
   name: "Item",
@@ -80,13 +88,13 @@ const orderType = new GraphQLObjectType({
   description: "This represents the Order",
   fields: () => ({
     id: { type: GraphQLNonNull(GraphQLString) },
-    orderItems: {
-      type: new GraphQLList(orderItemType),
-    },
     tableId: {
       type: new GraphQLList(GraphQLInt),
     },
     price: { type: GraphQLNonNull(GraphQLInt) },
+    orderItems: {
+      type: new GraphQLList(orderItemType),
+    },
   }),
 });
 
@@ -102,15 +110,16 @@ const orderItemType = new GraphQLObjectType({
     splitBill: { type: GraphQLFloat },
     options: {
       type: new GraphQLList(optionType),
-      resolve: (option) => {
-        const options = [];
-        option.filter((item) => item.optionId === option.id);
-        options.push(item);
-        return options;
+      resolve: (parent, args) => {
+        const itemOptions = parent.options;
+        const optionIds = itemOptions.map((option) => option.optionId);
+        const optionDetails = options.filter((option) => {
+          return optionIds.indexOf(option.id) !== -1;
+        });
+        return optionDetails;
       },
     },
   }),
-  resolve: () => {},
 });
 
 const orderOptionType = new GraphQLObjectType({
@@ -230,8 +239,6 @@ const RootMutationType = new GraphQLObjectType({
           orderItem.splitBill = itemPrice / orderItem.seatId.length;
         });
 
-        console.log(args);
-
         let doc = {
           id: uuidv4(),
           orderItems: args.items,
@@ -258,13 +265,3 @@ app.use(
   })
 );
 app.listen(8001, () => console.log("Server running on PORT 8001"));
-
-//mutation placeOrder {
-//  placeOrder(items: {
-//    itemId: 1,
-//    quantity: 1,
-//    options: []
-//  }) {
-//    id
-//  }
-//}
