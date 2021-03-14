@@ -103,8 +103,10 @@ const orderItemType = new GraphQLObjectType({
     options: {
       type: new GraphQLList(optionType),
       resolve: (option) => {
-        //return option.filter((item) => item.optionId === option.id);
-        return [];
+        const options = [];
+        option.filter((item) => item.optionId === option.id);
+        options.push(item);
+        return options;
       },
     },
   }),
