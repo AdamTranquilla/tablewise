@@ -1,11 +1,10 @@
-# Servo 
-#### (name is WIP.Latin for Server & are also precise EM actuators)
-A full restaurant server replacement that allows users to quickly place complicated orders based on seat number and returns bills hassle-free.
+# Tablewise
 
+A mobile restaurant menu that allows users to place and split orders based on their seat numbers. Orders can be fully customized, and menus can be filtered based on dietary restrictions.
 ## Stack
 
 ### Frontend:
-- React.js
+- React Native
 - TypeScript
 - JS, JSX
 - HTML5
