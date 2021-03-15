@@ -6,7 +6,6 @@ A mobile restaurant menu that allows users to place and split orders based on th
 ### Frontend:
 - React Native
 - TypeScript
-- JS, JSX
 - HTML5
 - Sass
 
