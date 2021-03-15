@@ -16,7 +16,7 @@ const itemSchema = new Schema({
   validOptionId: {
     type: [
       {
-        type: Number,
+        type: Schema.ObjectId,
         default: [],
       },
     ],
@@ -24,6 +24,7 @@ const itemSchema = new Schema({
   },
   categoryId: {
     type: Schema.ObjectId,
+    required: [true, "category is required"],
   },
 });
 

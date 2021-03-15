@@ -17,7 +17,11 @@ const { inputItemType } = require("./inputTypes.js");
 const mongoose = require("mongoose");
 require("dotenv").config();
 
-console.log("mongodb://localhost:27017/development");
+const Category = require("./models/categories.mongo");
+const Option = require("./models/options.mongo");
+const Item = require("./models/items.mongo");
+const Order = require("./models/orders.mongo");
+const { getAll, get, create, getById } = require("./transactions");
 
 mongoose.connect("mongodb://localhost:27017/development", {
   useNewUrlParser: true,
@@ -35,24 +39,28 @@ const itemType = new GraphQLObjectType({
   name: "Item",
   description: "This represents an Item of a Category",
   fields: () => ({
-    id: { type: GraphQLNonNull(GraphQLInt) },
+    id: { type: GraphQLNonNull(GraphQLString) },
     name: { type: GraphQLNonNull(GraphQLString) },
-    categoryId: { type: GraphQLNonNull(GraphQLInt) },
+    categoryId: { type: GraphQLNonNull(GraphQLString) },
     category: {
       type: categoryType,
-      resolve: (item) => {
-        return categories.find((category) => category.id === item.categoryId);
+      //resolve: (item) => {
+      // return categories.find((category) => category.id === item.categoryId);
+      //},
+      resolve: async (item) => {
+        let category = await getById(Category, item.categoryId);
+        return category;
       },
     },
-    validOptionId: { type: GraphQLNonNull(GraphQLInt) },
+    validOptionId: { type: GraphQLNonNull(GraphQLString) },
     options: {
       type: new GraphQLList(optionType),
-      resolve: (item) => {
+      resolve: async (item) => {
         let validOptionsIds = item.validOptionId;
-        let validOptions = options.filter((option) => {
-          return validOptionsIds.indexOf(option.id) !== -1;
+        let _options = await get(Option, {
+          _id: { $in: validOptionsIds },
         });
-        return validOptions;
+        return _options;
       },
     },
   }),
@@ -62,7 +70,7 @@ const optionType = new GraphQLObjectType({
   name: "Option",
   description: "This represents the Options of an Item",
   fields: () => ({
-    id: { type: GraphQLNonNull(GraphQLInt) },
+    _id: { type: GraphQLNonNull(GraphQLString) },
     name: { type: GraphQLNonNull(GraphQLString) },
     price: { type: GraphQLNonNull(GraphQLInt) },
   }),
@@ -72,7 +80,7 @@ const categoryType = new GraphQLObjectType({
   name: "Category",
   description: "This represents the Category of an Item",
   fields: () => ({
-    id: { type: GraphQLNonNull(GraphQLInt) },
+    id: { type: GraphQLNonNull(GraphQLString) },
     name: { type: GraphQLNonNull(GraphQLString) },
     items: {
       type: GraphQLList(itemType),
@@ -87,7 +95,7 @@ const orderType = new GraphQLObjectType({
   name: "Order",
   description: "This represents the Order",
   fields: () => ({
-    id: { type: GraphQLNonNull(GraphQLString) },
+    _id: { type: GraphQLNonNull(GraphQLString) },
     tableId: {
       type: new GraphQLList(GraphQLInt),
     },
@@ -102,7 +110,7 @@ const orderItemType = new GraphQLObjectType({
   name: "OrderItem",
   description: "This represents the Order",
   fields: () => ({
-    itemId: { type: GraphQLNonNull(GraphQLInt) },
+    itemId: { type: GraphQLNonNull(GraphQLString) },
     quantity: {
       type: GraphQLNonNull(GraphQLInt),
     },
@@ -126,8 +134,7 @@ const orderOptionType = new GraphQLObjectType({
   name: "OrderOption",
   description: "Options in order",
   fields: () => ({
-    id: { type: GraphQLNonNull(GraphQLInt) },
-    orderItemId: { type: GraphQLNonNull(GraphQLInt) },
+    id: { type: GraphQLNonNull(GraphQLString) },
     quantity: {
       type: GraphQLNonNull(GraphQLInt),
     },
@@ -145,23 +152,31 @@ const RootQueryType = new GraphQLObjectType({
       type: itemType,
       description: "A single item",
       args: {
-        id: { type: GraphQLInt },
+        id: { type: GraphQLString },
       },
-      resolve: (parent, args) => items.find((item) => item.id === args.id),
+      resolve: async (parent, args) => {
+        let item = await get(Item, args.id);
+        return item;
+      },
     },
     items: {
       type: new GraphQLList(itemType),
       description: "List of item",
-      resolve: () => items,
+      resolve: async (parent, args) => {
+        let items = await getAll(Item);
+        return items;
+      },
     },
     category: {
       type: categoryType,
       description: "A single category",
       args: {
-        id: { type: GraphQLInt },
+        id: { type: GraphQLString },
       },
-      resolve: (parent, args) =>
-        categories.find((category) => category.id === args.id),
+      resolve: async (parent, args) => {
+        let category = await getById(Category, args.id);
+        return category;
+      },
     },
     categories: {
       type: new GraphQLList(categoryType),
@@ -185,7 +200,7 @@ const RootMutationType = new GraphQLObjectType({
       description: "Add a Item",
       args: {
         name: { type: GraphQLNonNull(GraphQLString) },
-        categoryId: { type: GraphQLNonNull(GraphQLInt) },
+        categoryId: { type: GraphQLNonNull(GraphQLString) },
       },
       resolve: (parent, args) => {
         const item = {
@@ -223,29 +238,34 @@ const RootMutationType = new GraphQLObjectType({
           type: GraphQLInt,
         },
       },
-      resolve: (parent, args) => {
+      resolve: async (parent, args) => {
         let price = 0;
-        args.items.forEach((orderItem) => {
-          let item = _.find(items, { id: orderItem.itemId });
+        let _items = await args.items.map(async (orderItem) => {
+          let item = await getById(Item, orderItem.itemId);
           let itemPrice = 0;
           price += item.price * orderItem.quantity;
           itemPrice += item.price * orderItem.quantity;
-          orderItem.options.forEach((orderOption) => {
-            let option = _.find(options, { id: orderOption.optionId });
+          await orderItem.options.map(async (orderOption) => {
+            let option = await getById(Option, orderOption.optionId);
             if (option && option.price)
               price += option.price * orderOption.quantity;
             itemPrice += option.price * orderOption.quantity;
           });
           orderItem.splitBill = itemPrice / orderItem.seatId.length;
+          return orderItem;
         });
 
-        let doc = {
-          id: uuidv4(),
-          orderItems: args.items,
-          price,
-          tableId: args.tableId,
-        };
-        orders.push(doc);
+        let doc;
+
+        await Promise.all(_items).then(async (d) => {
+          doc = {
+            orderItems: d[0],
+            price,
+            tableId: args.tableId,
+          };
+          doc = await create(Order, doc);
+        });
+
         return doc;
       },
     },

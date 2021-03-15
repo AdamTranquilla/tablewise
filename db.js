@@ -1,8 +1,8 @@
 const mongoose = require("mongoose");
 const Categories = require("./models/categories.mongo");
-// const Options = require("./models/options.mongo");
+const Options = require("./models/options.mongo");
 const Item = require("./models/items.mongo");
-// const Orders = require("./models/orders.mongo");
+const Orders = require("./models/orders.mongo");
 
 const categories = [
   { id: 1, name: "Mains" },
@@ -87,15 +87,25 @@ exports.orders = [];
 // Categories.insertMany(_categories);
 
 // filling items
-(async () => {
-  let cats = await Categories.find({});
-  const _items = items.map((item) => {
-    item = { ...item };
-    item.categoryId = cats[item.categoryId - 1]
-      ? cats[item.categoryId - 1].id
-      : null;
-    delete item.id;
-    return item;
-  });
-  Item.insertMany(_items);
-})();
+//(async () => {
+//  let cats = await Categories.find({});
+//  let options = await Options.find({});
+//  const _items = items.map((item) => {
+//    item = { ...item };
+//    console.log(cats[item.categoryId - 1]);
+//    item.categoryId = cats[item.categoryId - 1]
+//      ? cats[item.categoryId - 1]._id
+//      : null;
+//    delete item.id;
+//    item.validOptionId.forEach((validOption, index) => {
+//      validOption -= 1;
+//      item.validOptionId[index] = options[validOption]._id;
+//    });
+//    return item;
+//  });
+//  Item.insertMany(_items);
+//})();
+
+// filling options
+// const _options = options.map((opt) => ({ name: opt.name, price: opt.price }));
+// Options.insertMany(_options);

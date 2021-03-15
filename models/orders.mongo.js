@@ -1,10 +1,7 @@
 const mongoose = require("mongoose");
-const Schema = mongoose.Schem;
+const Schema = mongoose.Schema;
 
 const orderSchema = new Schema({
-  id: {
-    type: Schema.ObjectId,
-  },
   tableId: {
     type: Number,
     required: [true, "Table Number is required"],
