@@ -1,5 +1,27 @@
 #table-container {
     width: 100%;
     border: 2px solid var(--dark-grey);
-    display: flex;
+    box-sizing: border-box;
+    margin-top: 10px;
+    border-radius: 5px;
 }
+
+.table-row {
+    display: flex;
+    height: 80px;
+    width: 100%;
+    justify-content: center;
+}
+
+.seat {
+    width: 80px;
+    height: 80px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.seat img {
+    max-height: 80%;
+    max-width: 80%;
+} 
