@@ -21,6 +21,7 @@ const Category = require("./models/categories.mongo");
 const Option = require("./models/options.mongo");
 const Item = require("./models/items.mongo");
 const Order = require("./models/orders.mongo");
+const Section = require("./models/sections.mongo");
 const { getAll, get, create, getById } = require("./transactions");
 
 mongoose.connect("mongodb://localhost:27017/development", {
@@ -83,10 +84,34 @@ const categoryType = new GraphQLObjectType({
   fields: () => ({
     _id: { type: GraphQLNonNull(GraphQLString) },
     name: { type: GraphQLNonNull(GraphQLString) },
+    section: {
+      type: GraphQLNonNull(sectionType),
+      resolve: async (parent, args) => {
+        let sections = await getAll(Section);
+        return sections;
+      },
+    },
     items: {
       type: GraphQLList(itemType),
-      resolve: (category) => {
-        return items.filter((item) => item.categoryId === category.id);
+      resolve: async (category) => {
+        let items = await get(Item, { categoryId: category._id });
+        return items;
+      },
+    },
+  }),
+});
+
+const sectionType = new GraphQLObjectType({
+  name: "Section",
+  description: "This represents the section of an Item",
+  fields: () => ({
+    _id: { type: GraphQLNonNull(GraphQLString) },
+    name: { type: GraphQLNonNull(GraphQLString) },
+    categories: {
+      type: GraphQLList(categoryType),
+      resolve: async (section) => {
+        let categories = await getAll(Category);
+        return categories;
       },
     },
   }),
@@ -168,6 +193,25 @@ const RootQueryType = new GraphQLObjectType({
         return items;
       },
     },
+    section: {
+      type: sectionType,
+      description: "A single section",
+      args: {
+        id: { type: GraphQLString },
+      },
+      resolve: async (parent, args) => {
+        let section = await getById(Section, args.id);
+        return section;
+      },
+    },
+    sections: {
+      type: new GraphQLList(sectionType),
+      description: "List of Sections",
+      resolve: async () => {
+        let sections = await getAll(Section);
+        return sections;
+      },
+    },
     category: {
       type: categoryType,
       description: "A single category",
@@ -182,12 +226,18 @@ const RootQueryType = new GraphQLObjectType({
     categories: {
       type: new GraphQLList(categoryType),
       description: "List of Categories",
-      resolve: () => categories,
+      resolve: async () => {
+        let categories = await getAll(Category);
+        return categories;
+      },
     },
     orders: {
       type: new GraphQLList(orderType),
       description: "List of Orders",
-      resolve: () => orders,
+      resolve: async () => {
+        let order = await getAll(Order);
+        return orders;
+      },
     },
   }),
 });
