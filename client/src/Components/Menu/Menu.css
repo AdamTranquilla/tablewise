@@ -1,0 +1,31 @@
+#menu-container {
+  display: flex;
+  flex-direction: column;
+  text-align: left;
+  padding: 5px;
+  flex: 1;
+  background-color: rgb(228, 228, 228);
+  /* border: 2px solid var(--dark-grey); */
+  box-sizing: border-box;
+  margin-top: 10px;
+  border-radius: 5px;
+}
+
+.section-container {
+  flex: 1;
+  padding: 5px;
+  height: 40vh;
+  overflow-y: scroll;
+}
+
+.cat-container {
+  flex: 1;
+}
+
+.item-container {
+  flex: 1;
+}
+
+.option-container {
+  /* flex: 1; */
+}

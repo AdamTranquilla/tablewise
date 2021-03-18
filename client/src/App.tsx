@@ -1,21 +1,19 @@
-import React from 'react';
-import WelcomeTable from './Components/WelcomeTable/WelcomeTable.Component';
-import Table from './Components/Table/Table.Component'
-import './App.css';
+import React from "react";
+import WelcomeTable from "./Components/WelcomeTable/WelcomeTable.Component";
+import Table from "./Components/Table/Table.Component";
+import Menu from "./Components/Menu/Menu";
+import "./App.css";
 
-function App() {
+export default function App() {
+  const state = { view: "MENU" };
+
   return (
     <div className="App">
-      <WelcomeTable 
-        tableNo={1}
-      />
-      <Table 
-        mySeat={1}
-        filledSeats={[1,2,3]}
-        totalSeats={6}
-      />
+      <WelcomeTable tableNo={1} />
+      {state.view === "TABLE" && (
+        <Table mySeat={1} filledSeats={[1, 2, 3]} totalSeats={6} />
+      )}
+      {state.view === "MENU" && <Menu />}
     </div>
   );
 }
-
-export default App;

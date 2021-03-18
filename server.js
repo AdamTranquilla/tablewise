@@ -39,9 +39,10 @@ const itemType = new GraphQLObjectType({
   name: "Item",
   description: "This represents an Item of a Category",
   fields: () => ({
-    id: { type: GraphQLNonNull(GraphQLString) },
+    _id: { type: GraphQLNonNull(GraphQLString) },
     name: { type: GraphQLNonNull(GraphQLString) },
     categoryId: { type: GraphQLNonNull(GraphQLString) },
+    price: { type: GraphQLInt },
     category: {
       type: categoryType,
       //resolve: (item) => {
@@ -80,7 +81,7 @@ const categoryType = new GraphQLObjectType({
   name: "Category",
   description: "This represents the Category of an Item",
   fields: () => ({
-    id: { type: GraphQLNonNull(GraphQLString) },
+    _id: { type: GraphQLNonNull(GraphQLString) },
     name: { type: GraphQLNonNull(GraphQLString) },
     items: {
       type: GraphQLList(itemType),
