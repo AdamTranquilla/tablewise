@@ -1,20 +1,26 @@
 import React from "react";
 import Category from "./MenuSectionCat";
 import "./Menu.css";
+interface SectionProps {
+  sectionName: string;
+}
 
-// import { makeStyles } from "@material-ui/core/styles";
-// import Accordion from "@material-ui/core/Accordion";
-// import AccordionDetails from "@material-ui/core/AccordionDetails";
-// import AccordionSummary from "@material-ui/core/AccordionSummary";
-// import Typography from "@material-ui/core/Typography";
-// import ExpandMoreIcon from "@material-ui/icons/ExpandMore";
+export default function Section({ sectionName }: SectionProps) {
+  // fetch categories for this section
+  const categories = [
+    { name: "Cat 1", _id: "str1" },
+    { name: "Cat 2", _id: "str2" },
+    { name: "Cat 3", _id: "str3" },
+  ];
 
-export default function Section() {
   return (
     <div className="section-container">
-      <span>Selected Section</span>
-      <Category />
-      <Category />
+      <h3>{sectionName}</h3>
+      <div className="cat-container">
+        {categories.map((category) => {
+          return <Category name={category.name} id={category._id} />;
+        })}
+      </div>
     </div>
   );
 }
