@@ -11,6 +11,7 @@ import Tab from "@material-ui/core/Tab";
 // import { graphql } from "react-apollo";
 // import { GET_SECTIONS } from "../../gql/section";
 
+
 function a11yProps(index: any) {
   return {
     id: `full-width-tab-${index}`,
