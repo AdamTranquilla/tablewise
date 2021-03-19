@@ -1,4 +1,4 @@
-import React /* , { useState } */ from "react";
+import React from "react";
 import Section from "./MenuSection";
 import "./Menu.css";
 
@@ -7,8 +7,10 @@ import { makeStyles, Theme, useTheme } from "@material-ui/core/styles";
 import AppBar from "@material-ui/core/AppBar";
 import Tabs from "@material-ui/core/Tabs";
 import Tab from "@material-ui/core/Tab";
-import { graphql } from "react-apollo";
-import { GET_SECTIONS } from "../../gql/section";
+
+// import { graphql } from "react-apollo";
+// import { GET_SECTIONS } from "../../gql/section";
+
 
 function a11yProps(index: any) {
   return {
@@ -36,6 +38,7 @@ export default function Menu(props: any) {
   const handleChangeIndex = (index: number) => {
     setValue(index);
   };
+
   const sections: string[] = ["Apps", "Mains", "Deserts", "Drinks"];
 
   return (
@@ -69,41 +72,3 @@ export default function Menu(props: any) {
     </div>
   );
 }
-
-/* 
-export default function Menu() {
-  //load menu here
-  //load sections here
-
-  const [selectedSection, setSection] = useState("Apps");
-
-  const sections: string[] = ["Apps", "Mains", "Deserts", "Drinks"];
-
-  return (
-    <div id="menu-container">
-      <h3>Menu</h3>
-
-      <div className="cat-btns">
-        {sections.map((section) => {
-          return (
-            <button
-              value={section}
-              type="button"
-              onClick={() => {
-                setSection(section);
-              }}
-              className={
-                section === selectedSection ? "selected-section-button" : ""
-              }
-            >
-              {section}
-            </button>
-          );
-        })}
-      </div>
-
-      <Section sectionName={selectedSection} />
-    </div>
-  );
-}
- */
