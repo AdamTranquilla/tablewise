@@ -2,7 +2,20 @@ import React from "react";
 import WelcomeTable from "./Components/WelcomeTable/WelcomeTable.Component";
 import Table from "./Components/Table/Table.Component";
 import Menu from "./Components/Menu/Menu";
+// import {
+//   ApolloClient,
+//   ApolloProvider,
+//   HttpLink,
+//   InMemoryCache,
+// } from "@apollo/client";
 import "./App.css";
+
+// const client = new ApolloClient({
+//   link: new HttpLink({
+//     uri: "https://hasura.io/learn/graphql",
+//   }),
+//   cache: new InMemoryCache(),
+// });
 
 export default function App() {
   const state = { view: "MENU" };
