@@ -11,8 +11,15 @@ import AppBar from "@material-ui/core/AppBar";
 import Tabs from "@material-ui/core/Tabs";
 import Tab from "@material-ui/core/Tab";
 
-// import { graphql } from "react-apollo";
-// import { GET_SECTIONS } from "../../gql/section";
+interface CategoryType {
+  _id: string;
+  name: string;
+}
+interface SectionType {
+  name: string;
+  _id: string;
+  categories: CategoryType[];
+}
 
 function a11yProps(index: any) {
   return {
