@@ -1,0 +1,19 @@
+:root {
+  --dark-grey: rgb(216, 216, 216);
+  --light-white: rgb(255, 255, 255);
+}
+
+.App {
+  text-align: center;
+  margin: 10px;
+}
+
+.App-header {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  font-size: calc(10px + 2vmin);
+  color: var(--light-white);
+}
