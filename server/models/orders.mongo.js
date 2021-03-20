@@ -6,10 +6,7 @@ const orderSchema = new Schema({
     type: Number,
     required: [true, "Table Number is required"],
   },
-  price: {
-    type: Number,
-    required: [true, "Price of order is required"],
-  },
+
   orderItems: [
     {
       itemId: {
@@ -35,7 +32,7 @@ const orderSchema = new Schema({
           optionId: Schema.ObjectId,
           quantity: {
             type: Number,
-            default: 1,
+            default: 0,
           },
         },
       ],
