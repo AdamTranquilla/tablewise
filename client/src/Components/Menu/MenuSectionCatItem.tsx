@@ -14,7 +14,7 @@ interface ItemType {
   options: Array<OptionType>;
 }
 
-export default function Item({ _id, name, price, options }: ItemType) {
+export default function Item({ _id, name, price, options, onAdd }: ItemType) {
   const [expanded, setExpanded] = React.useState<string | false>(`panel${_id}`);
 
   const handleChange = (panel: string) => (
@@ -23,6 +23,15 @@ export default function Item({ _id, name, price, options }: ItemType) {
   ) => {
     setExpanded(newExpanded ? panel : false);
   };
+
+  function customize(e) {
+    e.preventDefault();
+    const newItem = {
+      []
+    };
+
+    onAdd(addItem);
+  }
 
   return (
     <div /* className="item-container" */>
@@ -42,6 +51,9 @@ export default function Item({ _id, name, price, options }: ItemType) {
                 />
               );
             })}
+            <button onClick={(e) => customize(e)} className="btn">
+              POST
+            </button>
           </div>
         </AccordionContent>
       </Accordion>
