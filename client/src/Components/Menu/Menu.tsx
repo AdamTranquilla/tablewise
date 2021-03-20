@@ -2,11 +2,24 @@ import React from "react";
 import Section from "./MenuSection";
 import "./Menu.css";
 
+import { useQuery } from "@apollo/client";
+import { GET_SECTIONS } from "../../graphql/section";
+
 import SwipeableViews from "react-swipeable-views";
 import { makeStyles, Theme, useTheme } from "@material-ui/core/styles";
 import AppBar from "@material-ui/core/AppBar";
 import Tabs from "@material-ui/core/Tabs";
 import Tab from "@material-ui/core/Tab";
+
+interface CategoryType {
+  _id: string;
+  name: string;
+}
+interface SectionType {
+  name: string;
+  _id: string;
+  categories: CategoryType[];
+}
 
 function a11yProps(index: any) {
   return {
@@ -26,6 +39,14 @@ export default function Menu(props: any) {
   const classes = useStyles();
   const theme = useTheme();
   const [value, setValue] = React.useState(0);
+  const [sections, setSections] = React.useState([]);
+  const { loading, data } = useQuery(GET_SECTIONS);
+
+  React.useEffect(() => {
+    if (!loading) {
+      setSections(data.sections);
+    }
+  }, [loading]);
 
   const handleChange = (event: React.ChangeEvent<{}>, newValue: number) => {
     setValue(newValue);
@@ -35,7 +56,19 @@ export default function Menu(props: any) {
     setValue(index);
   };
 
-  const sections: string[] = ["Apps", "Mains", "Deserts", "Drinks"];
+  if (loading || !sections) {
+    return (
+      <div
+        style={{
+          display: "flex",
+          justifyContent: "center",
+          verticalAlign: "center",
+        }}
+      >
+        Loading ...
+      </div>
+    );
+  }
 
   return (
     <div id="menu-container">
@@ -49,8 +82,8 @@ export default function Menu(props: any) {
             variant="fullWidth"
             aria-label="full width tabs example"
           >
-            {sections.map((section, index) => {
-              return <Tab label={section} {...a11yProps(index)} />;
+            {sections.map((section: SectionType, index: Number) => {
+              return <Tab label={section.name} {...a11yProps(index)} />;
             })}
           </Tabs>
         </AppBar>
@@ -59,8 +92,14 @@ export default function Menu(props: any) {
           index={value}
           onChangeIndex={handleChangeIndex}
         >
-          {sections.map((section) => {
-            return <Section sectionName={section} />;
+          {sections.map((section: SectionType) => {
+            return (
+              <Section
+                sectionName={section.name}
+                id={section._id}
+                categories={section.categories}
+              />
+            );
           })}
         </SwipeableViews>
       </div>

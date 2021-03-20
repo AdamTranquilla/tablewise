@@ -1,18 +1,18 @@
 import React from "react";
 import Category from "./MenuSectionCat";
 import "./Menu.css";
+
+interface CategoryType {
+  _id: string;
+  name: string;
+}
 interface SectionProps {
   sectionName: string;
+  id: string;
+  categories: CategoryType[];
 }
 
-export default function Section({ sectionName }: SectionProps) {
-  // fetch categories for this section
-  const categories = [
-    { name: "Cat 1", _id: "str1" },
-    { name: "Cat 2", _id: "str2" },
-    { name: "Cat 3", _id: "str3" },
-  ];
-
+export default function Section({ sectionName, id, categories }: SectionProps) {
   return (
     <div className="section-container">
       <h3>{sectionName}</h3>

@@ -11,6 +11,7 @@ const {
 } = require("graphql");
 
 const app = express();
+const cors = require("cors");
 const _ = require("lodash");
 const { v4: uuidv4 } = require("uuid");
 const { inputItemType } = require("./inputTypes.js");
@@ -23,6 +24,8 @@ const Item = require("./models/items.mongo");
 const Order = require("./models/orders.mongo");
 const Section = require("./models/sections.mongo");
 const { getAll, get, create, getById } = require("./transactions");
+
+app.use(cors());
 
 mongoose.connect("mongodb://localhost:27017/development", {
   useNewUrlParser: true,
@@ -46,9 +49,6 @@ const itemType = new GraphQLObjectType({
     price: { type: GraphQLInt },
     category: {
       type: categoryType,
-      //resolve: (item) => {
-      // return categories.find((category) => category.id === item.categoryId);
-      //},
       resolve: async (item) => {
         let category = await getById(Category, item.categoryId);
         return category;
@@ -110,7 +110,7 @@ const sectionType = new GraphQLObjectType({
     categories: {
       type: GraphQLList(categoryType),
       resolve: async (section) => {
-        let categories = await getAll(Category);
+        let categories = await get(Category, { sectionId: section._id });
         return categories;
       },
     },
