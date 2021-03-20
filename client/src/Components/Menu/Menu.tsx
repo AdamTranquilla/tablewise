@@ -8,9 +8,6 @@ import AppBar from "@material-ui/core/AppBar";
 import Tabs from "@material-ui/core/Tabs";
 import Tab from "@material-ui/core/Tab";
 
-// import { graphql } from "react-apollo";
-// import { GET_SECTIONS } from "../../gql/section";
-
 function a11yProps(index: any) {
   return {
     id: `full-width-tab-${index}`,
@@ -21,7 +18,7 @@ function a11yProps(index: any) {
 const useStyles = makeStyles((theme: Theme) => ({
   root: {
     backgroundColor: theme.palette.background.paper,
-    width: 340,
+    flex: 1,
   },
 }));
 
@@ -42,7 +39,6 @@ export default function Menu(props: any) {
 
   return (
     <div id="menu-container">
-      <h3>Menu</h3>
       <div className={classes.root}>
         <AppBar position="static" color="default">
           <Tabs

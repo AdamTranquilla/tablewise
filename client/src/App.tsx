@@ -1,21 +1,8 @@
 import React from "react";
 import WelcomeTable from "./Components/WelcomeTable/WelcomeTable.Component";
-import Table from "./Components/Table/Table.Component";
+import Table from "./Components/Table/Table";
 import Menu from "./Components/Menu/Menu";
-// import {
-//   ApolloClient,
-//   ApolloProvider,
-//   HttpLink,
-//   InMemoryCache,
-// } from "@apollo/client";
-import "./App.css";
-
-// const client = new ApolloClient({
-//   link: new HttpLink({
-//     uri: "https://hasura.io/learn/graphql",
-//   }),
-//   cache: new InMemoryCache(),
-// });
+import Order from "./Components/Order/Order";
 
 export default function App() {
   const state = { view: "MENU" };
@@ -27,6 +14,7 @@ export default function App() {
         <Table mySeat={1} filledSeats={[1, 2, 3]} totalSeats={6} />
       )}
       {state.view === "MENU" && <Menu />}
+      <Order />
     </div>
   );
 }
