@@ -17,7 +17,14 @@
   },
   "homepage": "https://github.com/AdamTranquilla/server#readme",
   "dependencies": {
+<<<<<<< HEAD
     "cors": "^2.8.5",
+=======
+    "@apollo/client": "^3.3.12",
+    "@apollo/react-hooks": "^4.0.0",
+    "apollo": "^2.32.5",
+    "apollo-boost": "^0.4.9",
+>>>>>>> 14fb8405736305f9ed3411fe65903d1460a7a5e1
     "dotenv": "^8.2.0",
     "express": "^4.17.1",
     "express-graphql": "^0.12.0",

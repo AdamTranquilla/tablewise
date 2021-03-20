@@ -1,5 +1,27 @@
-# Server
+# Tablewise
 
-A full restaurant server replacement that allows users to quickly place complicated orders based on seat number and returns complicated bills hassle-free
+A mobile restaurant menu that allows users to place and split orders based on their seat numbers. Orders can be fully customized, and menus can be filtered based on dietary restrictions.
+## Stack
 
-sudo systemctl start mongod.service
+### Frontend:
+- React Native
+- TypeScript
+- HTML5
+- Sass
+
+### Backend:
+- GraphQL
+- Node
+- Express 
+- MongoDB
+- Socket.io
+
+## Testing:
+- Jest
+- Cypress
+- Storybook
+
+## Wireframe 
+
+!["balsamic"](https://i.imgur.com/XytIyy0.png)
+
