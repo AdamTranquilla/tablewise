@@ -3,7 +3,6 @@ import "./Menu.css";
 import Option from "./MenuSectionCatItemOptions";
 import { Accordion, AccordionBtn, AccordionContent } from "./Accordions";
 import { addToCart } from "../../utils/cartStorage";
-
 import { OrderContext } from "../../context/Order";
 
 interface OptionType {
@@ -28,6 +27,9 @@ export default function Item({ _id, name, price, options }: ItemType) {
   const [expanded, setExpanded] = React.useState<string | false>(`panel${_id}`);
   const [quantity, setQuantity] = React.useState(1);
   const [selectedOptions, setOptions] = React.useState<OptionOrderType[]>([]);
+  const context = React.useContext(OrderContext);
+
+  console.log("LENGTH>>>", context?.items?.length);
 
   const addOption = ({ optionId, quantity, name, price }: OptionOrderType) => {
     if (typeof quantity === "undefined") {
@@ -48,6 +50,7 @@ export default function Item({ _id, name, price, options }: ItemType) {
     addToCart(orderItem);
     setOptions([]);
     setQuantity(1);
+    context?.setItems(orderItem);
     alert("Added to cart");
   };
 
@@ -57,39 +60,31 @@ export default function Item({ _id, name, price, options }: ItemType) {
   ) => {
     setExpanded(newExpanded ? panel : false);
   };
-
   return (
-    <OrderContext.Consumer>
-      {(values) => {
-        console.log("VALUES ARE:", values);
-        return (
-          <div /* className="item-container" */>
-            <Accordion square onChange={handleChange(`panel${_id}`)}>
-              <AccordionBtn aria-controls="panel${id}-content">
-                <h3 style={{ margin: 0, marginBottom: 5 }}>{name}</h3>
-                <h3 style={{ margin: 0, marginBottom: 5 }}>${price}</h3>
-                <button className="btn" onClick={add}>
-                  Add to Order
-                </button>
-              </AccordionBtn>
-              <AccordionContent>
-                <div className="option-container">
-                  {options.map((option) => {
-                    return (
-                      <Option
-                        _id={option._id}
-                        name={option.name}
-                        price={option.price}
-                        addOption={addOption}
-                      />
-                    );
-                  })}
-                </div>
-              </AccordionContent>
-            </Accordion>
+    <div /* className="item-container" */>
+      <Accordion square onChange={handleChange(`panel${_id}`)}>
+        <AccordionBtn aria-controls="panel${id}-content">
+          <h3 style={{ margin: 0, marginBottom: 5 }}>{name}</h3>
+          <h3 style={{ margin: 0, marginBottom: 5 }}>${price}</h3>
+          <button className="btn" onClick={add}>
+            Add to Order
+          </button>
+        </AccordionBtn>
+        <AccordionContent>
+          <div className="option-container">
+            {options.map((option) => {
+              return (
+                <Option
+                  _id={option._id}
+                  name={option.name}
+                  price={option.price}
+                  addOption={addOption}
+                />
+              );
+            })}
           </div>
-        );
-      }}
-    </OrderContext.Consumer>
+        </AccordionContent>
+      </Accordion>
+    </div>
   );
 }
