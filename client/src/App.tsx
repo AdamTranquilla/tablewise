@@ -9,6 +9,7 @@ import {
   HttpLink,
   InMemoryCache,
 } from "@apollo/client";
+import { OrderContext } from "./context/Order";
 
 const client = new ApolloClient({
   link: new HttpLink({
@@ -17,7 +18,7 @@ const client = new ApolloClient({
   cache: new InMemoryCache(),
 });
 
-export default function App() {
+function App() {
   const state = { view: "MENU" };
 
   return (
@@ -33,3 +34,15 @@ export default function App() {
     </ApolloProvider>
   );
 }
+
+function AppWithContext() {
+  return (
+    <OrderContext.Provider value={[1, 2, 3]}>
+      <App />
+    </OrderContext.Provider>
+  );
+}
+
+AppWithContext.contextType = OrderContext;
+
+export default AppWithContext;

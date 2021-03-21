@@ -4,6 +4,8 @@ import Option from "./MenuSectionCatItemOptions";
 import { Accordion, AccordionBtn, AccordionContent } from "./Accordions";
 import { addToCart } from "../../utils/cartStorage";
 
+import { OrderContext } from "../../context/Order";
+
 interface OptionType {
   _id: String;
   name: String;
@@ -57,30 +59,37 @@ export default function Item({ _id, name, price, options }: ItemType) {
   };
 
   return (
-    <div /* className="item-container" */>
-      <Accordion square onChange={handleChange(`panel${_id}`)}>
-        <AccordionBtn aria-controls="panel${id}-content">
-          <h3 style={{ margin: 0, marginBottom: 5 }}>{name}</h3>
-          <h3 style={{ margin: 0, marginBottom: 5 }}>${price}</h3>
-          <button className="btn" onClick={add}>
-            Add to Order
-          </button>
-        </AccordionBtn>
-        <AccordionContent>
-          <div className="option-container">
-            {options.map((option) => {
-              return (
-                <Option
-                  _id={option._id}
-                  name={option.name}
-                  price={option.price}
-                  addOption={addOption}
-                />
-              );
-            })}
+    <OrderContext.Consumer>
+      {(values) => {
+        console.log("VALUES ARE:", values);
+        return (
+          <div /* className="item-container" */>
+            <Accordion square onChange={handleChange(`panel${_id}`)}>
+              <AccordionBtn aria-controls="panel${id}-content">
+                <h3 style={{ margin: 0, marginBottom: 5 }}>{name}</h3>
+                <h3 style={{ margin: 0, marginBottom: 5 }}>${price}</h3>
+                <button className="btn" onClick={add}>
+                  Add to Order
+                </button>
+              </AccordionBtn>
+              <AccordionContent>
+                <div className="option-container">
+                  {options.map((option) => {
+                    return (
+                      <Option
+                        _id={option._id}
+                        name={option.name}
+                        price={option.price}
+                        addOption={addOption}
+                      />
+                    );
+                  })}
+                </div>
+              </AccordionContent>
+            </Accordion>
           </div>
-        </AccordionContent>
-      </Accordion>
-    </div>
+        );
+      }}
+    </OrderContext.Consumer>
   );
 }

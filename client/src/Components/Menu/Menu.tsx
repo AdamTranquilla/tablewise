@@ -40,10 +40,10 @@ export default function Menu(props: any) {
   const theme = useTheme();
   const [value, setValue] = React.useState(0);
   const [sections, setSections] = React.useState([]);
-  const { loading, data } = useQuery(GET_SECTIONS);
+  const { loading, data, error } = useQuery(GET_SECTIONS);
 
   React.useEffect(() => {
-    if (!loading) {
+    if (!loading && data) {
       setSections(data.sections);
     }
   }, [loading]);
@@ -69,6 +69,12 @@ export default function Menu(props: any) {
       </div>
     );
   }
+
+  if (error) {
+    return <p> Some error occurred </p>;
+  }
+
+  console.log("ERROR", error);
 
   return (
     <div id="menu-container">
