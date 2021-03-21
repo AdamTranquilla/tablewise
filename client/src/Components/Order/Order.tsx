@@ -3,20 +3,22 @@ import "./Order.css";
 import { useMutation } from "@apollo/client";
 import { PLACE_ORDER } from "../../graphql/order";
 import { emptyCart } from "../../utils/cartStorage";
+import { OrderContext } from "../../context/Order";
 
-interface OptionType {
-  name?: String;
-  price?: String;
-  quantity: Number;
-  _id: String;
-}
-interface ItemType {
-  _id: String;
-  quantity: Number;
-  name?: String;
+interface OptionOrderType {
+  optionId: String;
+  quantity?: Number;
   price?: Number;
+  name?: String;
+}
+
+interface ItemType {
+  itemId: String;
+  quantity: Number;
   seatId: Number[];
-  options: OptionType[];
+  price?: Number;
+  name?: String;
+  options?: OptionOrderType[];
 }
 
 export default function Table() {
@@ -28,7 +30,7 @@ export default function Table() {
       return [];
     }
   };
-
+  const orderContext = React.useContext(OrderContext);
   const [cartData, setCartData] = React.useState(getCartData());
   const [placeOrderHandler, { loading, error, data }] = useMutation(
     PLACE_ORDER
@@ -45,7 +47,7 @@ export default function Table() {
     cart.forEach((item: ItemType) => {
       delete item.name;
       delete item.price;
-      item.options.forEach((option) => {
+      item.options?.forEach((option) => {
         delete option.name;
         delete option.price;
       });
@@ -80,7 +82,7 @@ export default function Table() {
               <h4>Edit</h4>
             </td>
           </tr>
-          {cartData.map((item: ItemType, index: Number) => {
+          {orderContext?.items?.map((item: ItemType, index: Number) => {
             return (
               <>
                 <tr className="order-row">
@@ -92,7 +94,7 @@ export default function Table() {
                 </tr>
                 <tr className="order-details">
                   <td colSpan={2}>
-                    {item.options.map((option) => {
+                    {item.options?.map((option) => {
                       return option.name;
                     })}
                   </td>

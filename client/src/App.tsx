@@ -9,6 +9,8 @@ import {
   HttpLink,
   InMemoryCache,
 } from "@apollo/client";
+import { OrderContext } from "./context/Order";
+import { getCart } from "./utils/cartStorage";
 
 const client = new ApolloClient({
   link: new HttpLink({
@@ -17,7 +19,23 @@ const client = new ApolloClient({
   cache: new InMemoryCache(),
 });
 
-export default function App() {
+interface OptionOrderType {
+  optionId: String;
+  quantity?: Number;
+  price: Number;
+  name: String;
+}
+
+interface ItemType {
+  itemId: String;
+  quantity: Number;
+  seatId: Number[];
+  price: Number;
+  name: String;
+  options?: OptionOrderType[];
+}
+
+function App() {
   const state = { view: "MENU" };
 
   return (
@@ -33,3 +51,23 @@ export default function App() {
     </ApolloProvider>
   );
 }
+
+function AppWithContext() {
+  const [items, _setItems] = React.useState<ItemType[] | undefined>(getCart());
+
+  const setItems = (item: ItemType) => {
+    items?.push(item);
+    let _items = items ? [...items] : [];
+    _setItems(_items);
+  };
+
+  return (
+    <OrderContext.Provider value={{ items, setItems }}>
+      <App />
+    </OrderContext.Provider>
+  );
+}
+
+AppWithContext.contextType = OrderContext;
+
+export default AppWithContext;

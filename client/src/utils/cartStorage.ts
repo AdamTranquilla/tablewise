@@ -29,3 +29,7 @@ export const removeFromCart = (index: Number) => {
 export const emptyCart = () => {
   localStorage.setItem("tablewise_cart", "[]");
 };
+
+export const getCart = () => {
+  return JSON.parse(localStorage.getItem("tablewise_cart") || "[]");
+};

@@ -3,6 +3,7 @@ import "./Menu.css";
 import Option from "./MenuSectionCatItemOptions";
 import { Accordion, AccordionBtn, AccordionContent } from "./Accordions";
 import { addToCart } from "../../utils/cartStorage";
+import { OrderContext } from "../../context/Order";
 
 interface OptionType {
   _id: String;
@@ -26,6 +27,9 @@ export default function Item({ _id, name, price, options }: ItemType) {
   const [expanded, setExpanded] = React.useState<string | false>(`panel${_id}`);
   const [quantity, setQuantity] = React.useState(1);
   const [selectedOptions, setOptions] = React.useState<OptionOrderType[]>([]);
+  const context = React.useContext(OrderContext);
+
+  console.log("LENGTH>>>", context?.items?.length);
 
   const addOption = ({ optionId, quantity, name, price }: OptionOrderType) => {
     if (typeof quantity === "undefined") {
@@ -46,6 +50,7 @@ export default function Item({ _id, name, price, options }: ItemType) {
     addToCart(orderItem);
     setOptions([]);
     setQuantity(1);
+    context?.setItems(orderItem);
     alert("Added to cart");
   };
 
@@ -55,7 +60,6 @@ export default function Item({ _id, name, price, options }: ItemType) {
   ) => {
     setExpanded(newExpanded ? panel : false);
   };
-
   return (
     <div /* className="item-container" */>
       <Accordion square onChange={handleChange(`panel${_id}`)}>
