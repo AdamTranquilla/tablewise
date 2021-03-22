@@ -55,10 +55,14 @@ function App() {
 function AppWithContext() {
   const [items, _setItems] = React.useState<ItemType[] | undefined>(getCart());
 
-  const setItems = (item: ItemType) => {
-    items?.push(item);
-    let _items = items ? [...items] : [];
-    _setItems(_items);
+  const setItems = (actionType: String, item?: ItemType) => {
+    if (actionType === "ADD_ITEM") {
+      if (item) items?.push(item);
+      let _items = items ? [...items] : [];
+      _setItems(_items);
+    } else if (actionType === "EMPTY") {
+      _setItems([]);
+    }
   };
 
   return (

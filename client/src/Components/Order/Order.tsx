@@ -39,11 +39,12 @@ export default function Table() {
   React.useEffect(() => {
     if (!loading && data) {
       emptyCart();
+      orderContext?.setItems("EMPTY");
     }
   }, [loading, error, data]);
 
   const getOrderData = () => {
-    let cart = JSON.parse(JSON.stringify(cartData));
+    let cart = JSON.parse(JSON.stringify(orderContext?.items));
     cart.forEach((item: ItemType) => {
       delete item.name;
       delete item.price;

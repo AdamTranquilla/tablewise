@@ -17,6 +17,9 @@ interface ItemType {
 }
 
 export const OrderContext = React.createContext<
-  | { items: ItemType[] | undefined; setItems: (item: ItemType) => void }
+  | {
+      items: ItemType[] | undefined;
+      setItems: (action: String, item?: ItemType) => void;
+    }
   | undefined
 >(undefined);
