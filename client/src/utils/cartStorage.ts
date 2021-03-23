@@ -1,16 +1,16 @@
 interface OptionOrderType {
   optionId: String;
   quantity?: Number;
-  price: Number;
-  name: String;
+  price?: Number;
+  name?: String;
 }
 
 interface ItemType {
   itemId: String;
   quantity: Number;
   seatId: Number[];
-  price: Number;
-  name: String;
+  price?: Number;
+  name?: String;
   options?: OptionOrderType[];
 }
 

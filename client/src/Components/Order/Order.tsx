@@ -4,6 +4,8 @@ import { useMutation } from "@apollo/client";
 import { PLACE_ORDER } from "../../graphql/order";
 import { emptyCart } from "../../utils/cartStorage";
 import { OrderContext } from "../../context/Order";
+import { addToCart } from "../../utils/cartStorage";
+import socket from "../../utils/socket.io";
 
 interface OptionOrderType {
   optionId: String;
@@ -19,6 +21,12 @@ interface ItemType {
   price?: Number;
   name?: String;
   options?: OptionOrderType[];
+}
+
+interface SplitEventResponseType {
+  splitBy: Number;
+  perSeatPrice: Number;
+  item: ItemType;
 }
 
 export default function Table() {
@@ -37,9 +45,19 @@ export default function Table() {
   );
 
   React.useEffect(() => {
+    socket.on("split_bill", function (data: SplitEventResponseType) {
+      console.log(localStorage.getItem("tablewise_cart"));
+      console.log(orderContext?.items?.length);
+      orderContext?.setItems("ADD_ITEM", data.item);
+      addToCart(data.item);
+    });
+  }, []);
+
+  React.useEffect(() => {
     if (!loading && data) {
       emptyCart();
       orderContext?.setItems("EMPTY");
+      alert(orderContext?.items?.length);
     }
   }, [loading, error, data]);
 

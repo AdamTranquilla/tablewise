@@ -7,10 +7,24 @@
     background: rgb(216, 216, 216);
     border-radius: 5px;
     overflow: hidden;
+    flex-direction: column;
 }
 
 #table-title {
     color: var(--light-white);
     font-weight: 600;
     font-size: 16px;
+    display: block;
+    text-align: center;
+    margin-bottom: 5;
+    margin-top: 0px;
+}
+
+#table-title-small {
+    color: var(--light-white);
+    font-weight: 600;
+    font-size: 12px;
+    display: block;
+    text-align: center;
+    margin: 0px;
 }

@@ -161,28 +161,28 @@ exports.orders = [];
 // })();
 
 // filling items
-(async () => {
-  let cats = await Categories.find({});
-  let options = await Options.find({});
-  const _items = items.map((item) => {
-    item = { ...item };
-    console.log(cats[item.categoryId - 1]);
-    item.categoryId = cats[item.categoryId - 1]
-      ? cats[item.categoryId - 1]._id
-      : null;
-    delete item.id;
-    item.presetOptionId.forEach((validOption, index) => {
-      validOption -= 1;
-      item.presetOptionId[index] = options[validOption]._id;
-    });
-    item.validOptionId.forEach((validOption, index) => {
-      validOption -= 1;
-      item.validOptionId[index] = options[validOption]._id;
-    });
-    return item;
-  });
-  Item.insertMany(_items);
-})();
+// (async () => {
+//   let cats = await Categories.find({});
+//   let options = await Options.find({});
+//   const _items = items.map((item) => {
+//     item = { ...item };
+//     console.log(cats[item.categoryId - 1]);
+//     item.categoryId = cats[item.categoryId - 1]
+//       ? cats[item.categoryId - 1]._id
+//       : null;
+//     delete item.id;
+//     item.presetOptionId.forEach((validOption, index) => {
+//       validOption -= 1;
+//       item.presetOptionId[index] = options[validOption]._id;
+//     });
+//     item.validOptionId.forEach((validOption, index) => {
+//       validOption -= 1;
+//       item.validOptionId[index] = options[validOption]._id;
+//     });
+//     return item;
+//   });
+//   Item.insertMany(_items);
+// })();
 
 // filling options
 // const _options = options.map((opt) => ({ name: opt.name, price: opt.price }));

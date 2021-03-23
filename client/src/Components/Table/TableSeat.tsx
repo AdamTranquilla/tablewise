@@ -24,6 +24,7 @@ export default function Seats({
       }}
     >
       <img src={isFilled ? FilledSeat : EmptySeat} alt="seat" />
+      <div className="seatNo">{id}</div>
     </div>
   );
 }

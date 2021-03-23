@@ -65,6 +65,11 @@ export default function Item({ _id, name, price, options }: ItemType) {
     addToCart(orderItem);
     setOptions([]);
     setQuantity(1);
+    socket.emit("split_bill", {
+      item: orderItem,
+      splitBy: context?.seatNo,
+      tableNo: context?.tableNo,
+    });
     context?.setItems("ADD_ITEM", orderItem);
     alert("Added to cart");
   };

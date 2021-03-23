@@ -45,7 +45,7 @@ appIo.on("connection", function (socket) {
     socket.uniqueUserId = data.table + "-" + data.seat;
 
     if (data.table in users) {
-      if (data.seat in users[data.table]) {
+      if (data.seat in users[data.table] && false) {
         return callback(true, {
           status: "error",
           msg: `User with these details (${JSON.stringify(
@@ -69,6 +69,8 @@ appIo.on("connection", function (socket) {
   });
 
   socket.on("disconnect", function (socket) {
+    if (socket.appData)
+      console.log("SOME disconnected", socket.appData.seat + " disoconncted");
     if (socket.appData) delete users[socket.appData.table][socket.appData.seat];
   });
 
@@ -78,17 +80,16 @@ appIo.on("connection", function (socket) {
     let perSeatPrice = item.price / item.seatId.length;
 
     for (let user in users[data.tableNo]) {
-      if (user != splitBy) {
-        console.log("ID", user);
-        users[data.tableNo][user].emit("split_bill", {
+      let _socket = users[data.tableNo][user];
+      if (user != splitBy && item.seatId.indexOf(Number(user)) > -1) {
+        appIo.to(_socket.id).emit("split_bill", {
           item,
           splitBy,
           perSeatPrice,
         });
+        appIo.to(_socket.id).emit("test_event", "hello world");
       }
     }
-
-    console.log("Item is split");
   });
 });
 
