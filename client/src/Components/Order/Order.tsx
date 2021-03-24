@@ -4,6 +4,8 @@ import { useMutation } from "@apollo/client";
 import { PLACE_ORDER } from "../../graphql/order";
 import { emptyCart } from "../../utils/cartStorage";
 import { OrderContext } from "../../context/Order";
+import { addToCart } from "../../utils/cartStorage";
+import socket from "../../utils/socket.io";
 
 interface OptionOrderType {
   optionId: String;
@@ -21,6 +23,12 @@ interface ItemType {
   options?: OptionOrderType[];
 }
 
+interface SplitEventResponseType {
+  splitBy: Number;
+  perSeatPrice: Number;
+  item: ItemType;
+}
+
 export default function Table() {
   const getCartData = () => {
     let data = localStorage.getItem("tablewise_cart");
@@ -31,19 +39,28 @@ export default function Table() {
     }
   };
   const orderContext = React.useContext(OrderContext);
-  const [cartData, setCartData] = React.useState(getCartData());
   const [placeOrderHandler, { loading, error, data }] = useMutation(
     PLACE_ORDER
   );
 
   React.useEffect(() => {
+    socket.removeEventListener();
+    socket.on("split_bill", function (data: SplitEventResponseType) {
+      orderContext?.setItems("ADD_ITEM", data.item);
+      addToCart(data.item);
+    });
+  }, [orderContext?.items]);
+
+  React.useEffect(() => {
     if (!loading && data) {
       emptyCart();
+      orderContext?.setItems("EMPTY");
+      alert(orderContext?.items?.length);
     }
   }, [loading, error, data]);
 
   const getOrderData = () => {
-    let cart = JSON.parse(JSON.stringify(cartData));
+    let cart = JSON.parse(JSON.stringify(orderContext?.items));
     cart.forEach((item: ItemType) => {
       delete item.name;
       delete item.price;

@@ -11,7 +11,9 @@ const {
 } = require("graphql");
 
 const app = express();
+const http = require("http").Server(app);
 const cors = require("cors");
+const io = require("./utils/socket.io.js");
 const _ = require("lodash");
 const { v4: uuidv4 } = require("uuid");
 const { inputItemType } = require("./inputTypes.js");
@@ -25,7 +27,71 @@ const Order = require("./models/orders.mongo");
 const Section = require("./models/sections.mongo");
 const { getAll, get, create, getById } = require("./transactions");
 
+const users = {};
+
 app.use(cors());
+io.init(http);
+
+appIo = io.getIo();
+
+appIo.on("connection", function (socket) {
+  socket.on("join", function (data, callback) {
+    if (isNaN(data.seat) || isNaN(data.table)) {
+      return callback(true, {
+        status: "error",
+        msg: "TableId and Seat Id should be a number",
+      });
+    }
+    socket.uniqueUserId = data.table + "-" + data.seat;
+
+    if (data.table in users) {
+      if (data.seat in users[data.table] && false) {
+        return callback(true, {
+          status: "error",
+          msg: `User with these details (${JSON.stringify(
+            data
+          )}) already exists`,
+        });
+      } else {
+        users[data.table][data.seat] = socket;
+      }
+    } else {
+      users[data.table] = {
+        [data.seat]: socket,
+      };
+    }
+
+    socket.appData = { table: data.table, seat: data.seat };
+    return callback(false, {
+      status: "success",
+      msg: "User added successfully",
+    });
+  });
+
+  socket.on("disconnect", function (socket) {
+    if (socket.appData)
+      console.log("SOME disconnected", socket.appData.seat + " disoconncted");
+    if (socket.appData) delete users[socket.appData.table][socket.appData.seat];
+  });
+
+  socket.on("split_bill", function (data) {
+    let item = data.item;
+    let splitBy = data.splitBy;
+    let perSeatPrice = item.price / item.seatId.length;
+
+    for (let user in users[data.tableNo]) {
+      let _socket = users[data.tableNo][user];
+      if (user != splitBy && item.seatId.indexOf(Number(user)) > -1) {
+        appIo.to(_socket.id).emit("split_bill", {
+          item,
+          splitBy,
+          perSeatPrice,
+        });
+        appIo.to(_socket.id).emit("test_event", "hello world");
+      }
+    }
+  });
+});
 
 mongoose.connect("mongodb://localhost:27017/development", {
   useNewUrlParser: true,
@@ -52,6 +118,17 @@ const itemType = new GraphQLObjectType({
       resolve: async (item) => {
         let category = await getById(Category, item.categoryId);
         return category;
+      },
+    },
+    presetOptionId: { type: GraphQLNonNull(GraphQLString) },
+    options: {
+      type: new GraphQLList(optionType),
+      resolve: async (item) => {
+        let validOptionsIds = item.presetOptionId;
+        let _options = await get(Option, {
+          _id: { $in: validOptionsIds },
+        });
+        return _options;
       },
     },
     validOptionId: { type: GraphQLNonNull(GraphQLString) },
@@ -335,4 +412,17 @@ app.use(
     graphiql: true,
   })
 );
-app.listen(8001, () => console.log("Server running on PORT 8001"));
+
+app.get("/users", (req, res) => {
+  let data = [];
+
+  for (let x in users) {
+    for (let y in users[x]) {
+      data.push(x + "-" + y);
+    }
+  }
+
+  res.send(data);
+});
+
+http.listen(8001, () => console.log("Server running on PORT 8001"));

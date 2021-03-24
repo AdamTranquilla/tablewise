@@ -11,6 +11,7 @@ import {
 } from "@apollo/client";
 import { OrderContext } from "./context/Order";
 import { getCart } from "./utils/cartStorage";
+import socket from "./utils/socket.io.js";
 
 const client = new ApolloClient({
   link: new HttpLink({
@@ -22,26 +23,44 @@ const client = new ApolloClient({
 interface OptionOrderType {
   optionId: String;
   quantity?: Number;
-  price: Number;
-  name: String;
+  price?: Number;
+  name?: String;
 }
 
 interface ItemType {
   itemId: String;
   quantity: Number;
   seatId: Number[];
-  price: Number;
-  name: String;
+  price?: Number;
+  name?: String;
   options?: OptionOrderType[];
 }
+
+let seatNo = Number(
+  window.location.hash.substr(1, window.location.hash.length)
+); //Math.ceil(Math.random() * 6);
+let tableNo = 1;
 
 function App() {
   const state = { view: "MENU" };
 
+  React.useEffect(() => {
+    socket.emit(
+      "join",
+      { table: tableNo, seat: seatNo },
+      function (err: boolean, msg: string) {
+        console.log(err, msg);
+        if (err) {
+          alert(err);
+        }
+      }
+    );
+  }, []);
+
   return (
     <ApolloProvider client={client}>
       <div className="App">
-        <WelcomeTable tableNo={1} />
+        <WelcomeTable tableNo={tableNo} seatNo={seatNo} />
         {state.view === "TABLE" && (
           <Table mySeat={1} filledSeats={[1, 2, 3]} totalSeats={6} />
         )}
@@ -55,14 +74,20 @@ function App() {
 function AppWithContext() {
   const [items, _setItems] = React.useState<ItemType[] | undefined>(getCart());
 
-  const setItems = (item: ItemType) => {
-    items?.push(item);
-    let _items = items ? [...items] : [];
-    _setItems(_items);
+  const setItems = (actionType: String, item?: ItemType) => {
+    if (actionType === "ADD_ITEM") {
+      if (item) items?.push(item);
+      let _items = items ? [...items] : [];
+      _setItems(_items);
+      console.log("SOME THING added to cart", item?.name);
+    } else if (actionType === "EMPTY") {
+      _setItems([]);
+      console.log("Cart is empty");
+    }
   };
 
   return (
-    <OrderContext.Provider value={{ items, setItems }}>
+    <OrderContext.Provider value={{ items, setItems, seatNo, tableNo }}>
       <App />
     </OrderContext.Provider>
   );

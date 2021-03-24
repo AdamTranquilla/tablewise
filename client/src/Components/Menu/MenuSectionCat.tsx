@@ -26,8 +26,6 @@ export default function Category({ name, id }: CategoryProps) {
   const [expanded, setExpanded] = React.useState<string | false>(`panel${id}`);
   const { loading, data } = useQuery(GET_CATEGORY, { variables: { id } });
   const [items, setItems] = React.useState([]);
-  console.clear();
-  console.log(">>>", loading, data);
 
   const handleChange = (panel: string) => (
     event: React.ChangeEvent<{}>,
