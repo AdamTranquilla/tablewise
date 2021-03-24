@@ -4,7 +4,7 @@ import { useMutation } from "@apollo/client";
 import { PLACE_ORDER } from "../../graphql/order";
 import { emptyCart } from "../../utils/cartStorage";
 import { OrderContext } from "../../context/Order";
-import { addToCart } from "../../utils/cartStorage";
+import { addToCart, removeFromCart } from "../../utils/cartStorage";
 import socket from "../../utils/socket.io";
 
 interface OptionOrderType {
@@ -20,6 +20,7 @@ interface ItemType {
   seatId: Number[];
   price?: Number;
   name?: String;
+  cartItemId?: String;
   options?: OptionOrderType[];
 }
 
@@ -72,6 +73,19 @@ export default function Table() {
     return cart;
   };
 
+  const removeItem = (index: number) => {
+    let item = orderContext?.items ? orderContext?.items[index] : null;
+    if (item && item?.seatId?.length > 1) {
+      socket.emit("item_removed", {
+        itemUUID: item?.cartItemId,
+        seatIds: item?.seatId,
+      });
+    }
+
+    removeFromCart(index);
+    orderContext?.removeItem(index);
+  };
+
   return (
     <div id="order-container">
       <div className="order-banner">
@@ -99,14 +113,18 @@ export default function Table() {
               <h4>Edit</h4>
             </td>
           </tr>
-          {orderContext?.items?.map((item: ItemType, index: Number) => {
+          {orderContext?.items?.map((item: ItemType, index: number) => {
             return (
               <>
                 <tr className="order-row">
                   <td>{item.name}</td>
-                  <td>${item.price}</td>
                   <td>
-                    <button>X</button>
+                    ${Math.ceil(Number(item.price) / item.seatId.length)} ({" "}
+                    <sup>1</sup>&frasl;
+                    <sub>{item.seatId.length}</sub> ){" "}
+                  </td>
+                  <td>
+                    <button onClick={() => removeItem(index)}>X</button>
                   </td>
                 </tr>
                 <tr className="order-details">

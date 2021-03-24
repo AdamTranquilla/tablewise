@@ -91,6 +91,10 @@ appIo.on("connection", function (socket) {
       }
     }
   });
+
+  socket.on("item_removed", function (data) {
+    // data.
+  });
 });
 
 mongoose.connect("mongodb://localhost:27017/development", {

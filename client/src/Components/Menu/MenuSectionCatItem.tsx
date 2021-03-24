@@ -7,6 +7,7 @@ import { OrderContext } from "../../context/Order";
 import socket from "../../utils/socket.io.js";
 import Modal from "react-modal";
 import SplitTable from "./SplitTable";
+import { v4 as uuid } from "uuid";
 
 interface OptionType {
   _id: String;
@@ -52,10 +53,9 @@ export default function Item({ _id, name, price, options }: ItemType) {
   };
 
   const add = (seatIds: Number[]) => {
-    console.log("SEAT_IDS", seatIds);
-
     let orderItem = {
       itemId: _id,
+      cartItemId: uuid(),
       quantity,
       options: selectedOptions,
       seatId: seatIds,

@@ -13,12 +13,14 @@ interface ItemType {
   seatId: Number[];
   price?: Number;
   name?: String;
+  cartItemId?: String;
   options?: OptionOrderType[];
 }
 
 export const OrderContext = React.createContext<
   | {
       items: ItemType[] | undefined;
+      removeItem: (index: number) => void;
       tableNo: Number;
       seatNo: Number;
       setItems: (action: String, item?: ItemType) => void;
