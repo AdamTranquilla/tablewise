@@ -79,15 +79,21 @@ function AppWithContext() {
       if (item) items?.push(item);
       let _items = items ? [...items] : [];
       _setItems(_items);
-      console.log("SOME THING added to cart", item?.name);
     } else if (actionType === "EMPTY") {
       _setItems([]);
-      console.log("Cart is empty");
     }
   };
 
+  const removeItem = (index: number) => {
+    items?.splice(index, 1);
+    let _items = items ? [...items] : [];
+    _setItems(_items);
+  };
+
   return (
-    <OrderContext.Provider value={{ items, setItems, seatNo, tableNo }}>
+    <OrderContext.Provider
+      value={{ items, removeItem, setItems, seatNo, tableNo }}
+    >
       <App />
     </OrderContext.Provider>
   );

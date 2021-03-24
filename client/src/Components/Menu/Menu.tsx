@@ -74,8 +74,6 @@ export default function Menu(props: any) {
     return <p> Some error occurred </p>;
   }
 
-  console.log("ERROR", error);
-
   return (
     <div id="menu-container">
       <div className={classes.root}>
