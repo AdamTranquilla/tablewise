@@ -39,7 +39,6 @@ export default function Table() {
     }
   };
   const orderContext = React.useContext(OrderContext);
-  const [cartData, setCartData] = React.useState(getCartData());
   const [placeOrderHandler, { loading, error, data }] = useMutation(
     PLACE_ORDER
   );
@@ -78,6 +77,7 @@ export default function Table() {
     <div id="order-container">
       <div className="order-banner">
         <h3>Bill: Seat #1</h3>
+        {JSON.stringify(orderContext?.items).substr(0, 20)}
         <button
           onClick={() => {
             placeOrderHandler({

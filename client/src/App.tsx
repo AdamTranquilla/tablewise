@@ -79,8 +79,10 @@ function AppWithContext() {
       if (item) items?.push(item);
       let _items = items ? [...items] : [];
       _setItems(_items);
+      console.log("SOME THING added to cart", item?.name);
     } else if (actionType === "EMPTY") {
       _setItems([]);
+      console.log("Cart is empty");
     }
   };
 
