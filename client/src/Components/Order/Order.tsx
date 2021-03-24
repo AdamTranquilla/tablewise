@@ -44,13 +44,12 @@ export default function Table() {
   );
 
   React.useEffect(() => {
+    socket.removeEventListener();
     socket.on("split_bill", function (data: SplitEventResponseType) {
-      console.log(localStorage.getItem("tablewise_cart"));
-      console.log(orderContext?.items?.length);
       orderContext?.setItems("ADD_ITEM", data.item);
       addToCart(data.item);
     });
-  }, []);
+  }, [orderContext?.items]);
 
   React.useEffect(() => {
     if (!loading && data) {
@@ -77,7 +76,6 @@ export default function Table() {
     <div id="order-container">
       <div className="order-banner">
         <h3>Bill: Seat #1</h3>
-        {JSON.stringify(orderContext?.items).substr(0, 20)}
         <button
           onClick={() => {
             placeOrderHandler({
