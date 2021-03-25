@@ -26,6 +26,8 @@ const Item = require("./models/items.mongo");
 const Order = require("./models/orders.mongo");
 const Section = require("./models/sections.mongo");
 const { getAll, get, create, getById } = require("./transactions");
+const uuid = require("uuid");
+const { placeOrder } = require("./controllers/order.controller");
 
 const users = {};
 
@@ -43,7 +45,12 @@ appIo.on("connection", function (socket) {
       });
     }
     socket.uniqueUserId = data.table + "-" + data.seat;
-
+    let seats = Object.keys(users[data.table] || {});
+    if (seats.length == 0) {
+      socket.tableId = uuid.v4();
+    } else {
+      socket.tableId = users[data.table][seats[0]].tableId;
+    }
     if (data.table in users) {
       if (data.seat in users[data.table] && false) {
         return callback(true, {
@@ -65,6 +72,7 @@ appIo.on("connection", function (socket) {
     return callback(false, {
       status: "success",
       msg: "User added successfully",
+      data: { tableId: socket.tableId },
     });
   });
 
@@ -81,6 +89,7 @@ appIo.on("connection", function (socket) {
 
     for (let user in users[data.tableNo]) {
       let _socket = users[data.tableNo][user];
+      users[data.tableNo][user].haveThingsInCart = true;
       if (user != splitBy && item.seatId.indexOf(Number(user)) > -1) {
         appIo.to(_socket.id).emit("split_bill", {
           item,
@@ -93,7 +102,13 @@ appIo.on("connection", function (socket) {
   });
 
   socket.on("item_removed", function (data) {
-    // data.
+    data.seatIds.forEach((seatId) => {
+      if (users[data.table] && users[data.table][seatId])
+        users[data.table][seatId].emit("item_removed", {
+          itemUUID: data.itemUUID,
+          seatId,
+        });
+    });
   });
 });
 
@@ -125,14 +140,14 @@ const itemType = new GraphQLObjectType({
       },
     },
     presetOptionId: { type: GraphQLNonNull(GraphQLString) },
-    options: {
+    presets: {
       type: new GraphQLList(optionType),
       resolve: async (item) => {
-        let validOptionsIds = item.presetOptionId;
-        let _options = await get(Option, {
-          _id: { $in: validOptionsIds },
+        let presetOptionIds = item.presetOptionId;
+        let _presets = await get(Option, {
+          _id: { $in: presetOptionIds },
         });
-        return _options;
+        return _presets;
       },
     },
     validOptionId: { type: GraphQLNonNull(GraphQLString) },
@@ -369,36 +384,13 @@ const RootMutationType = new GraphQLObjectType({
         tableId: {
           type: GraphQLInt,
         },
+        uniqueTableId: {
+          type: GraphQLNonNull(GraphQLString),
+        },
       },
       resolve: async (parent, args) => {
-        let price = 0;
-        let _items = await args.items.map(async (orderItem) => {
-          let item = await getById(Item, orderItem.itemId);
-          let itemPrice = 0;
-          price += item.price * orderItem.quantity;
-          itemPrice += item.price * orderItem.quantity;
-          await orderItem.options.map(async (orderOption) => {
-            let option = await getById(Option, orderOption.optionId);
-            if (option && option.price)
-              price += option.price * orderOption.quantity;
-            itemPrice += option.price * orderOption.quantity;
-          });
-          orderItem.splitBill = itemPrice / orderItem.seatId.length;
-          return orderItem;
-        });
-
-        let doc;
-
-        await Promise.all(_items).then(async (d) => {
-          doc = {
-            orderItems: d[0],
-            price,
-            tableId: args.tableId,
-          };
-          doc = await create(Order, doc);
-        });
-
-        return doc;
+        let res = placeOrder(parent, args);
+        return res;
       },
     },
   }),
