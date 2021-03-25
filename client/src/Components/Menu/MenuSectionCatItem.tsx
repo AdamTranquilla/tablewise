@@ -45,7 +45,7 @@ export default function Item({ _id, name, price, options }: ItemType) {
     },
   };
 
-  const addOption = ({ optionId, quantity, name, price }: OptionOrderType) => {
+  const editOption = ({ optionId, quantity, name, price }: OptionOrderType) => {
     if (typeof quantity === "undefined") {
       quantity = 0;
     }
@@ -107,7 +107,7 @@ export default function Item({ _id, name, price, options }: ItemType) {
                   _id={option._id}
                   name={option.name}
                   price={option.price}
-                  addOption={addOption}
+                  editOption={editOption}
                 />
               );
             })}

@@ -44,19 +44,6 @@ let tableNo = 1;
 function App() {
   const state = { view: "MENU" };
 
-  React.useEffect(() => {
-    socket.emit(
-      "join",
-      { table: tableNo, seat: seatNo },
-      function (err: boolean, msg: string) {
-        console.log(err, msg);
-        if (err) {
-          alert(err);
-        }
-      }
-    );
-  }, []);
-
   return (
     <ApolloProvider client={client}>
       <div className="App">
@@ -73,6 +60,22 @@ function App() {
 
 function AppWithContext() {
   const [items, _setItems] = React.useState<ItemType[] | undefined>(getCart());
+  const [tableId, setTableId] = React.useState<String>("");
+
+  React.useEffect(() => {
+    socket.emit(
+      "join",
+      { table: tableNo, seat: seatNo },
+      function (err: boolean, data: any) {
+        console.clear();
+        console.log("TABLEID", err, data);
+        if (err) {
+          alert(err);
+        }
+        setTableId(data.data.tableId);
+      }
+    );
+  }, []);
 
   const setItems = (actionType: String, item?: ItemType) => {
     if (actionType === "ADD_ITEM") {
@@ -90,9 +93,23 @@ function AppWithContext() {
     _setItems(_items);
   };
 
+  const updateItem = (index: number, data: ItemType) => {
+    let _items = items ? [...items] : [];
+    _items[index] = data;
+    _setItems(_items);
+  };
+
   return (
     <OrderContext.Provider
-      value={{ items, removeItem, setItems, seatNo, tableNo }}
+      value={{
+        items,
+        removeItem,
+        setItems,
+        updateItem,
+        seatNo,
+        tableNo,
+        tableId,
+      }}
     >
       <App />
     </OrderContext.Provider>

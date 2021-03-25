@@ -21,7 +21,9 @@ export const OrderContext = React.createContext<
   | {
       items: ItemType[] | undefined;
       removeItem: (index: number) => void;
+      updateItem: (index: number, data: ItemType) => void;
       tableNo: Number;
+      tableId: String;
       seatNo: Number;
       setItems: (action: String, item?: ItemType) => void;
     }

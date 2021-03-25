@@ -6,7 +6,16 @@ const orderSchema = new Schema({
     type: Number,
     required: [true, "Table Number is required"],
   },
-
+  uniqueTableId: {
+    type: String,
+    required: [true, "Unique table id is required"],
+  },
+  billPaid: [
+    {
+      type: String,
+      default: [],
+    },
+  ],
   orderItems: [
     {
       itemId: {

@@ -33,3 +33,9 @@ export const emptyCart = () => {
 export const getCart = () => {
   return JSON.parse(localStorage.getItem("tablewise_cart") || "[]");
 };
+
+export const updateCart = (index: number, data: ItemType) => {
+  const cartData = JSON.parse(localStorage.getItem("tablewise_cart") || "[]");
+  cartData[index] = data;
+  localStorage.setItem("tablewise_cart", JSON.stringify(cartData));
+};

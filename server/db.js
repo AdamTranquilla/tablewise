@@ -6,7 +6,7 @@ const Item = require("./models/items.mongo");
 const Orders = require("./models/orders.mongo");
 
 const sections = [
-  { id: 1, name: "Appetizers" },
+  { id: 1, name: "Starters" },
   { id: 2, name: "Mains" },
   { id: 3, name: "Dessert" },
   { id: 3, name: "Drinks" },
@@ -15,13 +15,13 @@ exports.sections = sections;
 
 const categories = [
   { id: 1, name: "Salads", sectionId: 1 },
-  { id: 2, name: "Wings", sectionId: 1 },
-  { id: 3, name: "Fries", sectionId: 1 },
-  { id: 4, name: "Burgers", sectionId: 2 },
+  { id: 2, name: "Fries", sectionId: 1 },
+  { id: 3, name: "Soups", sectionId: 1 },
+  { id: 4, name: "Sandwiches", sectionId: 2 },
   { id: 5, name: "Pizzas", sectionId: 2 },
   { id: 6, name: "Tacos", sectionId: 2 },
   { id: 7, name: "Cake", sectionId: 3 },
-  { id: 8, name: "Icecream", sectionId: 3 },
+  { id: 8, name: "Pie", sectionId: 3 },
   { id: 9, name: "Soda", sectionId: 4 },
   { id: 10, name: "Cafe", sectionId: 4 },
   { id: 11, name: "Alchohol", sectionId: 4 },
@@ -47,7 +47,7 @@ const items = [
   },
   {
     id: 6,
-    name: "Wings",
+    name: "Chili",
     price: 1200,
     presetOptionId: [],
     validOptionId: [13, 14, 15],
@@ -125,9 +125,9 @@ const options = [
   { id: 10, name: "Onions", price: 000 },
   { id: 11, name: "Ketchup", price: 000 },
   { id: 12, name: "Mustard", price: 000 },
-  { id: 13, name: "BBQ", price: 000 },
-  { id: 14, name: "Hot", price: 000 },
-  { id: 15, name: "Honey Garlic", price: 000 },
+  { id: 13, name: "xxx", price: 000 },
+  { id: 14, name: "xxx", price: 000 },
+  { id: 15, name: "xxx", price: 000 },
   { id: 16, name: "Cream", price: 50 },
   { id: 17, name: "Sugar", price: 50 },
   { id: 18, name: "Almond milk", price: 50 },
@@ -144,11 +144,11 @@ exports.options = options;
 
 exports.orders = [];
 
-//filling sections
+//// filling sections
 // const _sections = sections.map((section) => ({ name: section.name }));
 // Sections.insertMany(_sections);
 
-// filling categories ****** needs to also have sectionId
+//// filling categories ****** needs to also have sectionId
 // (async () => {
 //   let sections = await Sections.find({});
 //   const _categories = categories.map((cat) => {
@@ -160,7 +160,11 @@ exports.orders = [];
 //   Categories.insertMany(_categories);
 // })();
 
-// filling items
+//// filling options
+// const _options = options.map((opt) => ({ name: opt.name, price: opt.price }));
+// Options.insertMany(_options);
+
+//// filling items
 // (async () => {
 //   let cats = await Categories.find({});
 //   let options = await Options.find({});
@@ -183,7 +187,3 @@ exports.orders = [];
 //   });
 //   Item.insertMany(_items);
 // })();
-
-// filling options
-// const _options = options.map((opt) => ({ name: opt.name, price: opt.price }));
-// Options.insertMany(_options);

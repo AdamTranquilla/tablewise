@@ -4,7 +4,7 @@ import { useMutation } from "@apollo/client";
 import { PLACE_ORDER } from "../../graphql/order";
 import { emptyCart } from "../../utils/cartStorage";
 import { OrderContext } from "../../context/Order";
-import { addToCart, removeFromCart } from "../../utils/cartStorage";
+import { addToCart, removeFromCart, updateCart } from "../../utils/cartStorage";
 import socket from "../../utils/socket.io";
 
 interface OptionOrderType {
@@ -30,6 +30,11 @@ interface SplitEventResponseType {
   item: ItemType;
 }
 
+interface RemoveEventResponseType {
+  itemUUID: string;
+  seatId: number;
+}
+
 export default function Table() {
   const getCartData = () => {
     let data = localStorage.getItem("tablewise_cart");
@@ -50,6 +55,34 @@ export default function Table() {
       orderContext?.setItems("ADD_ITEM", data.item);
       addToCart(data.item);
     });
+    socket.on("item_removed", function (data: RemoveEventResponseType) {
+      let index: number = -1;
+      let length = orderContext?.items?.length || 0;
+
+      for (let i = 0; i < length; i++) {
+        if (
+          orderContext?.items &&
+          orderContext?.items[i].cartItemId === data.itemUUID
+        ) {
+          index = i;
+          break;
+        }
+      }
+
+      if (index > -1 && index < (orderContext?.items?.length || 0)) {
+        let updatedItem = orderContext?.items
+          ? orderContext?.items[index]
+          : null;
+
+        updatedItem?.seatId?.splice(
+          updatedItem?.seatId?.indexOf(data.seatId),
+          1
+        );
+
+        updatedItem !== null && orderContext?.updateItem(index, updatedItem);
+        updatedItem !== null && updateCart(index, updatedItem);
+      }
+    });
   }, [orderContext?.items]);
 
   React.useEffect(() => {
@@ -65,6 +98,8 @@ export default function Table() {
     cart.forEach((item: ItemType) => {
       delete item.name;
       delete item.price;
+      // we need it later
+      delete item.cartItemId;
       item.options?.forEach((option) => {
         delete option.name;
         delete option.price;
@@ -79,6 +114,7 @@ export default function Table() {
       socket.emit("item_removed", {
         itemUUID: item?.cartItemId,
         seatIds: item?.seatId,
+        table: orderContext?.tableNo,
       });
     }
 
@@ -92,8 +128,13 @@ export default function Table() {
         <h3>Bill: Seat #1</h3>
         <button
           onClick={() => {
+            alert(orderContext?.tableId);
             placeOrderHandler({
-              variables: { tableId: 1, items: getOrderData() },
+              variables: {
+                tableId: 1,
+                items: getOrderData(),
+                uniqueTableId: orderContext?.tableId,
+              },
             });
           }}
         >
