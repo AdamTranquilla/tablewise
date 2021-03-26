@@ -15,6 +15,7 @@ interface ItemType {
   name?: String;
   cartItemId?: String;
   options?: OptionOrderType[];
+  preselect: String[];
 }
 
 export const OrderContext = React.createContext<

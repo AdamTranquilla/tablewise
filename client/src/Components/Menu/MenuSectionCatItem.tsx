@@ -18,7 +18,7 @@ interface ItemType {
   name: String;
   price: Number;
   options: Array<OptionType>;
-  preselect?: Array<String>;
+  preselect: Array<String>;
 }
 interface OptionOrderType {
   optionId: String;
@@ -95,6 +95,7 @@ export default function Item({
       seatId: seatIds,
       name,
       price,
+      preselect,
     };
     if (seatIds.indexOf(context?.seatNo || -1) > -1) {
       addToCart(orderItem);

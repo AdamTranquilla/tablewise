@@ -34,6 +34,7 @@ interface ItemType {
   price?: Number;
   name?: String;
   options?: OptionOrderType[];
+  preselect: String[];
 }
 
 let seatNo = Number(

@@ -12,6 +12,7 @@ interface ItemType {
   price?: Number;
   name?: String;
   options?: OptionOrderType[];
+  preselect: String[];
 }
 
 export const addToCart = (item: ItemType) => {

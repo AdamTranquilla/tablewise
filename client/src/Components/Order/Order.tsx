@@ -6,6 +6,7 @@ import { emptyCart } from "../../utils/cartStorage";
 import { OrderContext } from "../../context/Order";
 import { addToCart, removeFromCart, updateCart } from "../../utils/cartStorage";
 import socket from "../../utils/socket.io";
+import calculatePrice from "../../utils/priceCalculation";
 
 interface OptionOrderType {
   optionId: String;
@@ -22,12 +23,25 @@ interface ItemType {
   name?: String;
   cartItemId?: String;
   options?: OptionOrderType[];
+  preselect: String[];
+}
+
+interface OrderItemType {
+  itemId: String;
+  quantity: Number;
+  seatId: Number[];
+  price?: Number;
+  name?: String;
+  cartItemId?: String;
+  options?: OptionOrderType[];
+  preselect?: String[];
 }
 
 interface SplitEventResponseType {
   splitBy: Number;
   perSeatPrice: Number;
   item: ItemType;
+  preselect: String[];
 }
 
 interface RemoveEventResponseType {
@@ -52,6 +66,8 @@ export default function Table() {
   React.useEffect(() => {
     socket.removeEventListener();
     socket.on("split_bill", function (data: SplitEventResponseType) {
+      data.item.preselect = getPreselectFromContext(data.item.itemId);
+
       orderContext?.setItems("ADD_ITEM", data.item);
       addToCart(data.item);
     });
@@ -95,11 +111,12 @@ export default function Table() {
 
   const getOrderData = () => {
     let cart = JSON.parse(JSON.stringify(orderContext?.items));
-    cart.forEach((item: ItemType) => {
+    cart.forEach((item: OrderItemType) => {
       delete item.name;
       delete item.price;
       // we need it later
       delete item.cartItemId;
+      delete item.preselect;
       item.options?.forEach((option) => {
         delete option.name;
         delete option.price;
@@ -120,6 +137,21 @@ export default function Table() {
 
     removeFromCart(index);
     orderContext?.removeItem(index);
+  };
+
+  const getPreselectFromContext = (id: String) => {
+    let item;
+    for (
+      let i = 0;
+      i < (orderContext?.items ? orderContext?.items?.length : 0);
+      i++
+    ) {
+      if (orderContext?.items && orderContext?.items[i].itemId === id) {
+        item = orderContext?.items ? orderContext?.items[i] : {};
+        break;
+      }
+    }
+    return item?.preselect || [];
   };
 
   return (
@@ -160,9 +192,12 @@ export default function Table() {
                 <tr className="order-row">
                   <td>{item.name}</td>
                   <td>
-                    ${Math.ceil(Number(item.price) / item.seatId.length)} ({" "}
-                    <sup>1</sup>&frasl;
-                    <sub>{item.seatId.length}</sub> ){" "}
+                    $
+                    {Number(
+                      calculatePrice(item, getPreselectFromContext(item.itemId))
+                    ) / item.seatId.length}
+                    ( <sup>1</sup>&frasl;
+                    <sub>{item.seatId.length}</sub> )
                   </td>
                   <td>
                     <button onClick={() => removeItem(index)}>X</button>
@@ -180,7 +215,7 @@ export default function Table() {
           })}
           <tr className="order-footer">
             <td>Total</td>
-            <td>$ 10.20</td>
+            <td>$ ??.??</td>
             <td></td>
           </tr>
         </table>
