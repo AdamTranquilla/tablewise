@@ -62,7 +62,10 @@ export default function Item({ _id, name, price, options }: ItemType) {
       name,
       price,
     };
-    addToCart(orderItem);
+    if (seatIds.indexOf(context?.seatNo || -1) > -1) {
+      addToCart(orderItem);
+      context?.setItems("ADD_ITEM", orderItem);
+    }
     setOptions([]);
     setQuantity(1);
     socket.emit("split_bill", {
@@ -70,7 +73,6 @@ export default function Item({ _id, name, price, options }: ItemType) {
       splitBy: context?.seatNo,
       tableNo: context?.tableNo,
     });
-    context?.setItems("ADD_ITEM", orderItem);
     alert("Added to cart");
   };
 
@@ -84,6 +86,7 @@ export default function Item({ _id, name, price, options }: ItemType) {
     <div /* className="item-container" */>
       <Modal isOpen={showSplit} style={customStyles}>
         <SplitTable
+          preSelect={context?.seatNo}
           onClick={(seats: Number[]) => {
             setShowSplit(false);
             add(seats);
