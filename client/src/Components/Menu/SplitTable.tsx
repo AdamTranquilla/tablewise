@@ -3,10 +3,11 @@ import Table from "../Table/Table";
 
 interface SplitTableProps {
   onClick: (seats: Number[]) => void;
+  preSelect?: Number;
 }
 
-export default function SplitTable({ onClick }: SplitTableProps) {
-  const [selected, _setSelected] = useState<Number[]>([0]);
+export default function SplitTable({ onClick, preSelect }: SplitTableProps) {
+  const [selected, _setSelected] = useState<Number[]>([preSelect || 0]);
 
   const setSelected = (id: Number) => {
     if (selected.indexOf(id) === -1) {
