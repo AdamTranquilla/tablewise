@@ -139,7 +139,7 @@ const itemType = new GraphQLObjectType({
         return category;
       },
     },
-    presetOptionId: { type: GraphQLNonNull(GraphQLString) },
+    presetOptionId: { type: GraphQLList(GraphQLString) },
     presets: {
       type: new GraphQLList(optionType),
       resolve: async (item) => {
@@ -150,7 +150,7 @@ const itemType = new GraphQLObjectType({
         return _presets;
       },
     },
-    validOptionId: { type: GraphQLNonNull(GraphQLString) },
+    validOptionId: { type: GraphQLList(GraphQLString) },
     options: {
       type: new GraphQLList(optionType),
       resolve: async (item) => {

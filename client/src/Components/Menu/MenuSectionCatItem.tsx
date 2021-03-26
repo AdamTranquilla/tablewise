@@ -8,7 +8,6 @@ import socket from "../../utils/socket.io.js";
 import Modal from "react-modal";
 import SplitTable from "./SplitTable";
 import { v4 as uuid } from "uuid";
-
 interface OptionType {
   _id: String;
   name: String;
@@ -19,6 +18,7 @@ interface ItemType {
   name: String;
   price: Number;
   options: Array<OptionType>;
+  preselect?: Array<String>;
 }
 interface OptionOrderType {
   optionId: String;
@@ -27,12 +27,33 @@ interface OptionOrderType {
   price: Number;
 }
 
-export default function Item({ _id, name, price, options }: ItemType) {
+export default function Item({
+  _id,
+  name,
+  price,
+  options,
+  preselect,
+}: ItemType) {
   const [expanded, setExpanded] = React.useState<string | false>(`panel${_id}`);
   const [quantity, setQuantity] = React.useState(1);
   const [selectedOptions, setOptions] = React.useState<OptionOrderType[]>([]);
   const context = React.useContext(OrderContext);
   const [showSplit, setShowSplit] = React.useState<boolean>(false);
+
+  React.useEffect(() => {
+    let preSelectedOptions = options.filter((option) => {
+      return preselect && preselect?.indexOf(option._id) > -1;
+    });
+
+    preSelectedOptions.map((option) => {
+      selectedOptions.push({
+        name: option.name,
+        optionId: option._id,
+        quantity: 1,
+        price: option.price,
+      });
+    });
+  }, []);
 
   const customStyles = {
     content: {
@@ -52,6 +73,19 @@ export default function Item({ _id, name, price, options }: ItemType) {
     selectedOptions.push({ optionId, quantity, name, price });
   };
 
+  const removeOption = (optionId: String) => {
+    let index = -1;
+
+    for (let i = 0; i < selectedOptions.length; i++) {
+      if (selectedOptions[i].optionId === optionId) {
+        index = i;
+        break;
+      }
+    }
+    selectedOptions.splice(index, 1);
+    setOptions([...selectedOptions]);
+  };
+
   const add = (seatIds: Number[]) => {
     let orderItem = {
       itemId: _id,
@@ -66,7 +100,6 @@ export default function Item({ _id, name, price, options }: ItemType) {
       addToCart(orderItem);
       context?.setItems("ADD_ITEM", orderItem);
     }
-    setOptions([]);
     setQuantity(1);
     socket.emit("split_bill", {
       item: orderItem,
@@ -111,6 +144,12 @@ export default function Item({ _id, name, price, options }: ItemType) {
                   name={option.name}
                   price={option.price}
                   editOption={editOption}
+                  removeOption={removeOption}
+                  isSelected={
+                    preselect?.indexOf
+                      ? preselect?.indexOf(option._id) > -1
+                      : false
+                  }
                 />
               );
             })}

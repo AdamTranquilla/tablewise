@@ -13,24 +13,18 @@ const itemSchema = new Schema({
     type: Number,
     required: [true, "price of item is required"],
   },
-  presetOptionId: {
-    type: [
-      {
-        type: Schema.ObjectId,
-        default: [],
-      },
-    ],
-    required: [true, "Preset option array is required"],
-  },
-  validOptionId: {
-    type: [
-      {
-        type: Schema.ObjectId,
-        default: [],
-      },
-    ],
-    required: [true, "Valid option array is required"],
-  },
+  presetOptionId: [
+    {
+      type: String,
+      default: [],
+    },
+  ],
+  validOptionId: [
+    {
+      type: String,
+      default: [],
+    },
+  ],
   categoryId: {
     type: Schema.ObjectId,
     required: [true, "category is required"],

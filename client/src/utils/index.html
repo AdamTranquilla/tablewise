@@ -1,0 +1,243 @@
+<html>
+	<head>
+		<title>Stripe Payment</title>
+		<script src="https://js.stripe.com/v3/"></script>
+		<script>
+			var stripe = Stripe('YOUR STRIPE PUBLIC KEY HERE');
+			async function pay() {
+				let res = await fetch("http://localhost:3000/session");
+				let data = await res.json();
+				console.log(data)
+				stripe.redirectToCheckout({
+					sessionId: data.session.id,
+				}).then(function (result) {
+					console.log(result);
+				});
+			}
+		</script>
+		<style>
+		.header {
+  padding: 60px;
+  text-align: center;
+  background: #1abc9c;
+  color: white;
+  font-size: 30px;
+}
+			.block {
+				display : inline-block;
+				font-family : 'segoe ui', sans-serif;
+				margin : 10px;
+				width : 200px;
+				height : 330px;
+				padding : 10px;
+				border : 1px solid lightgrey;
+			}
+			.block img {
+				width : 200px;
+				height : 200px;
+			}
+			.block h2 {
+				font-weight : 600;
+				font-size : 18px;
+			}
+			.block p {
+				font-size : 13px;
+			}
+			.block input {
+			display : block;
+			height : 30px;
+			border-radius : 2px;
+			border : 1px solid lightgrey;
+			padding : 4px;
+			width : 100%;
+		}
+			.block input[type=button] {
+				
+			}
+		</style>
+	</head>
+	<body>
+		<div class="header">
+  <h1>Cigars Online</h1>
+  <p>Buy Cigars Online and pay using stripe</p>
+</div>
+		<div class='block'>
+			<img src='https://partycity6.scene7.com/is/image/PartyCity/_pdp_sq_?$_1000x1000_$&$product=PartyCity/482210'>
+			<h2>Cigar 1</h2>
+			<p>Buy this cigar and pay through stripe in just one step</p>
+			<input type='button' value = 'Pay 20$' onclick='pay()'>
+		</div>
+		
+		<div class='block'>
+			<img src='https://cdn.shopify.com/s/files/1/2593/6884/products/trumpcigar2.jpg?v=1555353287'>
+			<h2>Cigar 2</h2>
+			<p>Buy this cigar and pay through stripe in just one step</p>
+			<input type='button' value = 'Pay 20$' onclick='pay()'>
+		</div>
+		
+		<div class='block'>
+			<img src='https://www.havanahouse.co.uk/wp-content/uploads/2017/02/oo7bondselection.jpg'>
+			<h2>Cigar 3</h2>
+			<p>Buy this cigar and pay through stripe in just one step</p>
+			<input type='button' value = 'Pay 20$' onclick='pay()'>
+		</div>
+		
+		<div class='block'>
+			<img src='https://partycity6.scene7.com/is/image/PartyCity/_pdp_sq_?$_1000x1000_$&$product=PartyCity/482210'>
+			<h2>Cigar 4</h2>
+			<p>Buy this cigar and pay through stripe in just one step</p>
+			<input type='button' value = 'Pay 20$' onclick='pay()'>
+		</div>
+
+		<div class='block'>
+			<img src='https://cdn.shopify.com/s/files/1/0645/8771/products/10th_single_notube.jpg?v=1538104194'>
+			<h2>Cigar 5</h2>
+			<p>Buy this cigar and pay through stripe in just one step</p>
+			<input type='button' value = 'Pay 20$' onclick='pay()'>
+		</div>
+		
+		<div class='block'>
+			<img src='https://partycity6.scene7.com/is/image/PartyCity/_pdp_sq_?$_1000x1000_$&$product=PartyCity/482210'>
+			<h2>Cigar 1</h2>
+			<p>Buy this cigar and pay through stripe in just one step</p>
+			<input type='button' value = 'Pay 20$' onclick='pay()'>
+		</div>
+		
+		<div class='block'>
+			<img src='https://cdn.shopify.com/s/files/1/2593/6884/products/trumpcigar2.jpg?v=1555353287'>
+			<h2>Cigar 2</h2>
+			<p>Buy this cigar and pay through stripe in just one step</p>
+			<input type='button' value = 'Pay 20$' onclick='pay()'>
+		</div>
+		
+		<div class='block'>
+			<img src='https://www.havanahouse.co.uk/wp-content/uploads/2017/02/oo7bondselection.jpg'>
+			<h2>Cigar 3</h2>
+			<p>Buy this cigar and pay through stripe in just one step</p>
+			<input type='button' value = 'Pay 20$' onclick='pay()'>
+		</div>
+		
+		<div class='block'>
+			<img src='https://partycity6.scene7.com/is/image/PartyCity/_pdp_sq_?$_1000x1000_$&$product=PartyCity/482210'>
+			<h2>Cigar 4</h2>
+			<p>Buy this cigar and pay through stripe in just one step</p>
+			<input type='button' value = 'Pay 20$' onclick='pay()'>
+		</div>
+
+		<div class='block'>
+			<img src='https://cdn.shopify.com/s/files/1/0645/8771/products/10th_single_notube.jpg?v=1538104194'>
+			<h2>Cigar 5</h2>
+			<p>Buy this cigar and pay through stripe in just one step</p>
+			<input type='button' value = 'Pay 20$' onclick='pay()'>
+		</div><div class='block'>
+			<img src='https://www.havanahouse.co.uk/wp-content/uploads/2017/02/oo7bondselection.jpg'>
+			<h2>Cigar 3</h2>
+			<p>Buy this cigar and pay through stripe in just one step</p>
+			<input type='button' value = 'Pay 20$' onclick='pay()'>
+		</div>
+		
+		<div class='block'>
+			<img src='https://partycity6.scene7.com/is/image/PartyCity/_pdp_sq_?$_1000x1000_$&$product=PartyCity/482210'>
+			<h2>Cigar 4</h2>
+			<p>Buy this cigar and pay through stripe in just one step</p>
+			<input type='button' value = 'Pay 20$' onclick='pay()'>
+		</div>
+
+		<div class='block'>
+			<img src='https://cdn.shopify.com/s/files/1/0645/8771/products/10th_single_notube.jpg?v=1538104194'>
+			<h2>Cigar 5</h2>
+			<p>Buy this cigar and pay through stripe in just one step</p>
+			<input type='button' value = 'Pay 20$' onclick='pay()'>
+		</div>
+		
+		<div class='block'>
+			<img src='https://partycity6.scene7.com/is/image/PartyCity/_pdp_sq_?$_1000x1000_$&$product=PartyCity/482210'>
+			<h2>Cigar 1</h2>
+			<p>Buy this cigar and pay through stripe in just one step</p>
+			<input type='button' value = 'Pay 20$' onclick='pay()'>
+		</div>
+		
+		<div class='block'>
+			<img src='https://cdn.shopify.com/s/files/1/2593/6884/products/trumpcigar2.jpg?v=1555353287'>
+			<h2>Cigar 2</h2>
+			<p>Buy this cigar and pay through stripe in just one step</p>
+			<input type='button' value = 'Pay 20$' onclick='pay()'>
+		</div>
+		
+		<div class='block'>
+			<img src='https://www.havanahouse.co.uk/wp-content/uploads/2017/02/oo7bondselection.jpg'>
+			<h2>Cigar 3</h2>
+			<p>Buy this cigar and pay through stripe in just one step</p>
+			<input type='button' value = 'Pay 20$' onclick='pay()'>
+		</div>
+		
+		<div class='block'>
+			<img src='https://partycity6.scene7.com/is/image/PartyCity/_pdp_sq_?$_1000x1000_$&$product=PartyCity/482210'>
+			<h2>Cigar 4</h2>
+			<p>Buy this cigar and pay through stripe in just one step</p>
+			<input type='button' value = 'Pay 20$' onclick='pay()'>
+		</div>
+
+		<div class='block'>
+			<img src='https://cdn.shopify.com/s/files/1/0645/8771/products/10th_single_notube.jpg?v=1538104194'>
+			<h2>Cigar 5</h2>
+			<p>Buy this cigar and pay through stripe in just one step</p>
+			<input type='button' value = 'Pay 20$' onclick='pay()'>
+		</div><div class='block'>
+			<img src='https://www.havanahouse.co.uk/wp-content/uploads/2017/02/oo7bondselection.jpg'>
+			<h2>Cigar 3</h2>
+			<p>Buy this cigar and pay through stripe in just one step</p>
+			<input type='button' value = 'Pay 20$' onclick='pay()'>
+		</div>
+		
+		<div class='block'>
+			<img src='https://partycity6.scene7.com/is/image/PartyCity/_pdp_sq_?$_1000x1000_$&$product=PartyCity/482210'>
+			<h2>Cigar 4</h2>
+			<p>Buy this cigar and pay through stripe in just one step</p>
+			<input type='button' value = 'Pay 20$' onclick='pay()'>
+		</div>
+
+		<div class='block'>
+			<img src='https://cdn.shopify.com/s/files/1/0645/8771/products/10th_single_notube.jpg?v=1538104194'>
+			<h2>Cigar 5</h2>
+			<p>Buy this cigar and pay through stripe in just one step</p>
+			<input type='button' value = 'Pay 20$' onclick='pay()'>
+		</div>
+		
+		<div class='block'>
+			<img src='https://partycity6.scene7.com/is/image/PartyCity/_pdp_sq_?$_1000x1000_$&$product=PartyCity/482210'>
+			<h2>Cigar 1</h2>
+			<p>Buy this cigar and pay through stripe in just one step</p>
+			<input type='button' value = 'Pay 20$' onclick='pay()'>
+		</div>
+		
+		<div class='block'>
+			<img src='https://cdn.shopify.com/s/files/1/2593/6884/products/trumpcigar2.jpg?v=1555353287'>
+			<h2>Cigar 2</h2>
+			<p>Buy this cigar and pay through stripe in just one step</p>
+			<input type='button' value = 'Pay 20$' onclick='pay()'>
+		</div>
+		
+		<div class='block'>
+			<img src='https://www.havanahouse.co.uk/wp-content/uploads/2017/02/oo7bondselection.jpg'>
+			<h2>Cigar 3</h2>
+			<p>Buy this cigar and pay through stripe in just one step</p>
+			<input type='button' value = 'Pay 20$' onclick='pay()'>
+		</div>
+		
+		<div class='block'>
+			<img src='https://partycity6.scene7.com/is/image/PartyCity/_pdp_sq_?$_1000x1000_$&$product=PartyCity/482210'>
+			<h2>Cigar 4</h2>
+			<p>Buy this cigar and pay through stripe in just one step</p>
+			<input type='button' value = 'Pay 20$' onclick='pay()'>
+		</div>
+
+		<div class='block'>
+			<img src='https://cdn.shopify.com/s/files/1/0645/8771/products/10th_single_notube.jpg?v=1538104194'>
+			<h2>Cigar 5</h2>
+			<p>Buy this cigar and pay through stripe in just one step</p>
+			<input type='button' value = 'Pay 20$' onclick='pay()'>
+		</div>
+	
+	</body>
+</html>

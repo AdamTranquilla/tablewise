@@ -20,6 +20,7 @@ interface ItemType {
   name: string;
   price: Number;
   options: OptionType[];
+  presetOptionId?: String[];
 }
 
 export default function Category({ name, id }: CategoryProps) {
@@ -69,6 +70,7 @@ export default function Category({ name, id }: CategoryProps) {
                 name={item.name}
                 price={item.price}
                 options={item.options}
+                preselect={item.presetOptionId}
               />
             );
           })}
