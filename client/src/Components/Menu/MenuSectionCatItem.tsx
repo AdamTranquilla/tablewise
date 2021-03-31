@@ -22,7 +22,6 @@ interface ItemType {
 }
 interface OptionOrderType {
   optionId: String;
-  quantity?: Number;
   name: String;
   price: Number;
 }
@@ -35,7 +34,6 @@ export default function Item({
   preselect,
 }: ItemType) {
   const [expanded, setExpanded] = React.useState<string | false>(`panel${_id}`);
-  const [quantity, setQuantity] = React.useState(1);
   const [selectedOptions, setOptions] = React.useState<OptionOrderType[]>([]);
   const context = React.useContext(OrderContext);
   const [showSplit, setShowSplit] = React.useState<boolean>(false);
@@ -49,7 +47,6 @@ export default function Item({
       selectedOptions.push({
         name: option.name,
         optionId: option._id,
-        quantity: 1,
         price: option.price,
       });
     });
@@ -66,11 +63,8 @@ export default function Item({
     },
   };
 
-  const editOption = ({ optionId, quantity, name, price }: OptionOrderType) => {
-    if (typeof quantity === "undefined") {
-      quantity = 0;
-    }
-    selectedOptions.push({ optionId, quantity, name, price });
+  const editOption = ({ optionId, name, price }: OptionOrderType) => {
+    selectedOptions.push({ optionId, name, price });
   };
 
   const removeOption = (optionId: String) => {
@@ -90,7 +84,6 @@ export default function Item({
     let orderItem = {
       itemId: _id,
       cartItemId: uuid(),
-      quantity,
       options: selectedOptions,
       seatId: seatIds,
       name,
@@ -101,7 +94,6 @@ export default function Item({
       addToCart(orderItem);
       context?.setItems("ADD_ITEM", orderItem);
     }
-    setQuantity(1);
     socket.emit("split_bill", {
       item: orderItem,
       splitBy: context?.seatNo,

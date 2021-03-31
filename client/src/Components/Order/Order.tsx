@@ -10,14 +10,12 @@ import calculatePrice from "../../utils/priceCalculation";
 
 interface OptionOrderType {
   optionId: String;
-  quantity?: Number;
   price?: Number;
   name?: String;
 }
 
 interface ItemType {
   itemId: String;
-  quantity: Number;
   seatId: Number[];
   price?: Number;
   name?: String;
@@ -28,7 +26,6 @@ interface ItemType {
 
 interface OrderItemType {
   itemId: String;
-  quantity: Number;
   seatId: Number[];
   price?: Number;
   name?: String;

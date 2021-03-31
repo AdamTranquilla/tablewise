@@ -7,12 +7,12 @@ exports.placeOrder = async (parent, args) => {
   let _items = await args.items.map(async (orderItem) => {
     let item = await getById(Item, orderItem.itemId);
     let itemPrice = 0;
-    price += item.price * orderItem.quantity;
-    itemPrice += item.price * orderItem.quantity;
+    price += item.price;
+    itemPrice += item.price;
     await orderItem.options.map(async (orderOption) => {
       let option = await getById(Option, orderOption.optionId);
-      if (option && option.price) price += option.price * orderOption.quantity;
-      itemPrice += option.price * orderOption.quantity;
+      if (option && option.price) price += option.price;
+      itemPrice += option.price;
     });
     orderItem.splitBill = itemPrice / orderItem.seatId.length;
     return orderItem;
