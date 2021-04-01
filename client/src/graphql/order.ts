@@ -4,7 +4,7 @@ export const PLACE_ORDER = gql`
   mutation PLACE_ORDER(
     $tableId: Int
     $items: [InputItemType]
-    $uniqueTableId: String!
+    $uniqueTableId: string!
   ) {
     placeOrder(
       tableId: $tableId

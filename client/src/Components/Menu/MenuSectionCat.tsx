@@ -13,14 +13,14 @@ interface CategoryProps {
 interface OptionType {
   name: string;
   _id: string;
-  price: Number;
+  price: number;
 }
 interface ItemType {
   _id: string;
   name: string;
-  price: Number;
+  price: number;
   options: OptionType[];
-  presetOptionId: String[];
+  presetOptionId: string[];
 }
 
 export default function Category({ name, id }: CategoryProps) {

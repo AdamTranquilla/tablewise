@@ -1,16 +1,16 @@
 interface OptionOrderType {
-  optionId: String;
-  price?: Number;
-  name?: String;
+  optionId: string;
+  price?: number;
+  name?: string;
 }
 
 interface ItemType {
-  itemId: String;
-  seatId: Number[];
-  price?: Number;
-  name?: String;
+  itemId: string;
+  seatId: number[];
+  price?: number;
+  name?: string;
   options?: OptionOrderType[];
-  preselect: String[];
+  preselect: string[];
 }
 
 export const addToCart = (item: ItemType) => {
@@ -19,7 +19,7 @@ export const addToCart = (item: ItemType) => {
   localStorage.setItem("tablewise_cart", JSON.stringify(cartData));
 };
 
-export const removeFromCart = (index: Number) => {
+export const removeFromCart = (index: number) => {
   const cartData = JSON.parse(localStorage.getItem("tablewise_cart") || "[]");
   cartData.splice(index, 1);
   localStorage.setItem("tablewise_cart", JSON.stringify(cartData));

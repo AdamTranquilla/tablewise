@@ -2,14 +2,14 @@ import React, { useState } from "react";
 import Table from "../Table/Table";
 
 interface SplitTableProps {
-  onClick: (seats: Number[]) => void;
-  preSelect?: Number;
+  onClick: (seats: number[]) => void;
+  preSelect?: number;
 }
 
 export default function SplitTable({ onClick, preSelect }: SplitTableProps) {
-  const [selected, _setSelected] = useState<Number[]>([preSelect || 0]);
+  const [selected, _setSelected] = useState<number[]>([preSelect || 0]);
 
-  const setSelected = (id: Number) => {
+  const setSelected = (id: number) => {
     if (selected.indexOf(id) === -1) {
       selected.push(id);
     } else {

@@ -9,21 +9,21 @@ import Modal from "react-modal";
 import SplitTable from "./SplitTable";
 import { v4 as uuid } from "uuid";
 interface OptionType {
-  _id: String;
-  name: String;
-  price: Number;
+  _id: string;
+  name: string;
+  price: number;
 }
 interface ItemType {
-  _id: String;
-  name: String;
-  price: Number;
+  _id: string;
+  name: string;
+  price: number;
   options: Array<OptionType>;
-  preselect: Array<String>;
+  preselect: Array<string>;
 }
 interface OptionOrderType {
-  optionId: String;
-  name: String;
-  price: Number;
+  optionId: string;
+  name: string;
+  price: number;
 }
 
 export default function Item({
@@ -67,7 +67,7 @@ export default function Item({
     selectedOptions.push({ optionId, name, price });
   };
 
-  const removeOption = (optionId: String) => {
+  const removeOption = (optionId: string) => {
     let index = -1;
 
     for (let i = 0; i < selectedOptions.length; i++) {
@@ -80,7 +80,7 @@ export default function Item({
     setOptions([...selectedOptions]);
   };
 
-  const add = (seatIds: Number[]) => {
+  const add = (seatIds: number[]) => {
     let orderItem = {
       itemId: _id,
       cartItemId: uuid(),
@@ -113,7 +113,7 @@ export default function Item({
       <Modal isOpen={showSplit} style={customStyles}>
         <SplitTable
           preSelect={context?.seatNo}
-          onClick={(seats: Number[]) => {
+          onClick={(seats: number[]) => {
             setShowSplit(false);
             add(seats);
           }}

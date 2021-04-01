@@ -1,19 +1,19 @@
 interface OptionOrderType {
-  optionId: String;
-  price?: Number;
-  name?: String;
+  optionId: string;
+  price?: number;
+  name?: string;
 }
 
 interface ItemType {
-  itemId: String;
-  seatId: Number[];
-  price?: Number;
-  name?: String;
-  cartItemId?: String;
+  itemId: string;
+  seatId: number[];
+  price?: number;
+  name?: string;
+  cartItemId?: string;
   options?: OptionOrderType[];
 }
 
-const calculatePrice = (item: ItemType, preselect: String[] | undefined) => {
+const calculatePrice = (item: ItemType, preselect: string[] | undefined) => {
   let price = item.price;
 
   item &&

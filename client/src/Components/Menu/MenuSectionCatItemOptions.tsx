@@ -2,18 +2,18 @@ import React from "react";
 import "./Menu.css";
 
 interface OptionOrderType {
-  optionId: String;
-  name: String;
-  price: Number;
+  optionId: string;
+  name: string;
+  price: number;
 }
 
 interface OptionType {
-  _id: String;
-  name: String;
-  price: Number;
+  _id: string;
+  name: string;
+  price: number;
   isSelected: boolean;
   editOption: (option: OptionOrderType) => void;
-  removeOption: (optionId: String) => void;
+  removeOption: (optionId: string) => void;
 }
 
 export default function Option({

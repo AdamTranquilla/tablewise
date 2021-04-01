@@ -3,10 +3,10 @@ import TableSeat from "./TableSeat";
 import "./Table.css";
 
 interface TableProps {
-  mySeat?: Number;
-  filledSeats: Number[];
-  totalSeats: Number;
-  onClick?: (seatId: Number) => void;
+  mySeat?: number;
+  filledSeats: number[];
+  totalSeats: number;
+  onClick?: (seatId: number) => void;
 }
 
 export default function Table({

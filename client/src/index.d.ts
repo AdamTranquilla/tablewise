@@ -1,5 +1,5 @@
 interface OptionType {
-  _id: String;
-  name: String;
-  price: Number;
+  _id: string;
+  name: string;
+  price: number;
 }

@@ -9,36 +9,36 @@ import socket from "../../utils/socket.io";
 import calculatePrice from "../../utils/priceCalculation";
 
 interface OptionOrderType {
-  optionId: String;
-  price?: Number;
-  name?: String;
+  optionId: string;
+  price?: number;
+  name?: string;
 }
 
 interface ItemType {
-  itemId: String;
-  seatId: Number[];
-  price?: Number;
-  name?: String;
-  cartItemId?: String;
+  itemId: string;
+  seatId: number[];
+  price?: number;
+  name?: string;
+  cartItemId?: string;
   options?: OptionOrderType[];
-  preselect: String[];
+  preselect: string[];
 }
 
 interface OrderItemType {
-  itemId: String;
-  seatId: Number[];
-  price?: Number;
-  name?: String;
-  cartItemId?: String;
+  itemId: string;
+  seatId: number[];
+  price?: number;
+  name?: string;
+  cartItemId?: string;
   options?: OptionOrderType[];
-  preselect?: String[];
+  preselect?: string[];
 }
 
 interface SplitEventResponseType {
-  splitBy: Number;
-  perSeatPrice: Number;
+  splitBy: number;
+  perSeatPrice: number;
   item: ItemType;
-  preselect: String[];
+  preselect: string[];
 }
 
 interface RemoveEventResponseType {
@@ -136,7 +136,7 @@ export default function Table() {
     orderContext?.removeItem(index);
   };
 
-  const getPreselectFromContext = (id: String) => {
+  const getPreselectFromContext = (id: string) => {
     let item;
     for (
       let i = 0;

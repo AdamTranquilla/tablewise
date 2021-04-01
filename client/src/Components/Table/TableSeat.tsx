@@ -5,8 +5,8 @@ import FilledSeat from "../../public/seatFilled.png";
 interface TableSeatProps {
   alignment: "center" | "flex-end" | "flex-start";
   isFilled: Boolean;
-  id: Number;
-  onClick?: (id: Number) => void;
+  id: number;
+  onClick?: (id: number) => void;
 }
 
 export default function Seats({

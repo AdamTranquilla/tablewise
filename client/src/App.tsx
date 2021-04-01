@@ -21,18 +21,18 @@ const client = new ApolloClient({
 });
 
 interface OptionOrderType {
-  optionId: String;
-  price?: Number;
-  name?: String;
+  optionId: string;
+  price?: number;
+  name?: string;
 }
 
 interface ItemType {
-  itemId: String;
-  seatId: Number[];
-  price?: Number;
-  name?: String;
+  itemId: string;
+  seatId: number[];
+  price?: number;
+  name?: string;
   options?: OptionOrderType[];
-  preselect: String[];
+  preselect: string[];
 }
 
 let seatNo = Number(
@@ -59,7 +59,7 @@ function App() {
 
 function AppWithContext() {
   const [items, _setItems] = React.useState<ItemType[] | undefined>(getCart());
-  const [tableId, setTableId] = React.useState<String>("");
+  const [tableId, setTableId] = React.useState<string>("");
 
   React.useEffect(() => {
     socket.emit(
@@ -76,7 +76,7 @@ function AppWithContext() {
     );
   }, []);
 
-  const setItems = (actionType: String, item?: ItemType) => {
+  const setItems = (actionType: string, item?: ItemType) => {
     if (actionType === "ADD_ITEM") {
       if (item) items?.push(item);
       let _items = items ? [...items] : [];
