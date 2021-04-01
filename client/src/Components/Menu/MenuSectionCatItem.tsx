@@ -1,6 +1,7 @@
 import React from "react";
 import "./Menu.css";
 import Option from "./MenuSectionCatItemOptions";
+import { OptionOrderType, ItemType } from "../../types";
 import { Accordion, AccordionBtn, AccordionContent } from "./Accordions";
 import { addToCart } from "../../utils/cartStorage";
 import { OrderContext } from "../../context/Order";
@@ -8,30 +9,13 @@ import socket from "../../utils/socket.io.js";
 import Modal from "react-modal";
 import SplitTable from "./SplitTable";
 import { v4 as uuid } from "uuid";
-interface OptionType {
-  _id: string;
-  name: string;
-  price: number;
-}
-interface ItemType {
-  _id: string;
-  name: string;
-  price: number;
-  options: Array<OptionType>;
-  preselect: Array<string>;
-}
-interface OptionOrderType {
-  optionId: string;
-  name: string;
-  price: number;
-}
 
 export default function Item({
   _id,
   name,
   price,
   options,
-  preselect,
+  presetOptionId,
 }: ItemType) {
   const [expanded, setExpanded] = React.useState<string | false>(`panel${_id}`);
   const [selectedOptions, setOptions] = React.useState<OptionOrderType[]>([]);
@@ -40,7 +24,7 @@ export default function Item({
 
   React.useEffect(() => {
     let preSelectedOptions = options.filter((option) => {
-      return preselect && preselect?.indexOf(option._id) > -1;
+      return presetOptionId && presetOptionId?.indexOf(option._id) > -1;
     });
 
     preSelectedOptions.map((option) => {
@@ -88,7 +72,7 @@ export default function Item({
       seatId: seatIds,
       name,
       price,
-      preselect,
+      presetOptionId,
     };
     if (seatIds.indexOf(context?.seatNo || -1) > -1) {
       addToCart(orderItem);
@@ -139,8 +123,8 @@ export default function Item({
                   editOption={editOption}
                   removeOption={removeOption}
                   isSelected={
-                    preselect?.indexOf
-                      ? preselect?.indexOf(option._id) > -1
+                    presetOptionId?.indexOf
+                      ? presetOptionId?.indexOf(option._id) > -1
                       : false
                   }
                 />

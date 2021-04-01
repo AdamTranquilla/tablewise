@@ -1,20 +1,6 @@
 import React from "react";
+import { OptionType } from "../../types";
 import "./Menu.css";
-
-interface OptionOrderType {
-  optionId: string;
-  name: string;
-  price: number;
-}
-
-interface OptionType {
-  _id: string;
-  name: string;
-  price: number;
-  isSelected: boolean;
-  editOption: (option: OptionOrderType) => void;
-  removeOption: (optionId: string) => void;
-}
 
 export default function Option({
   _id,

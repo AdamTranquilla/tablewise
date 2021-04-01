@@ -1,4 +1,5 @@
 import React from "react";
+import { OptionOrderType } from "../../types";
 import "./Order.css";
 import { useMutation } from "@apollo/client";
 import { PLACE_ORDER } from "../../graphql/order";
@@ -8,37 +9,37 @@ import { addToCart, removeFromCart, updateCart } from "../../utils/cartStorage";
 import socket from "../../utils/socket.io";
 import calculatePrice from "../../utils/priceCalculation";
 
-interface OptionOrderType {
-  optionId: string;
-  price?: number;
-  name?: string;
-}
+// interface OptionOrderType {
+//   optionId: string;
+//   price?: number;
+//   name?: string;
+// }
 
 interface ItemType {
   itemId: string;
-  seatId: number[];
-  price?: number;
   name?: string;
-  cartItemId?: string;
+  price?: number;
   options?: OptionOrderType[];
-  preselect: string[];
+  presetOptionId: string[];
+  seatId: number[];
+  cartItemId?: string;
 }
 
 interface OrderItemType {
   itemId: string;
-  seatId: number[];
-  price?: number;
   name?: string;
-  cartItemId?: string;
+  price?: number;
   options?: OptionOrderType[];
-  preselect?: string[];
+  presetOptionId?: string[];
+  cartItemId?: string;
+  seatId: number[];
 }
 
 interface SplitEventResponseType {
   splitBy: number;
   perSeatPrice: number;
   item: ItemType;
-  preselect: string[];
+  presetOptionId: string[];
 }
 
 interface RemoveEventResponseType {
@@ -63,7 +64,7 @@ export default function Table() {
   React.useEffect(() => {
     socket.removeEventListener();
     socket.on("split_bill", function (data: SplitEventResponseType) {
-      data.item.preselect = getPreselectFromContext(data.item.itemId);
+      data.item.presetOptionId = getPreselectFromContext(data.item.itemId);
 
       orderContext?.setItems("ADD_ITEM", data.item);
       addToCart(data.item);
@@ -113,7 +114,7 @@ export default function Table() {
       delete item.price;
       // we need it later
       delete item.cartItemId;
-      delete item.preselect;
+      delete item.presetOptionId;
       item.options?.forEach((option) => {
         delete option.name;
         delete option.price;
@@ -148,7 +149,7 @@ export default function Table() {
         break;
       }
     }
-    return item?.preselect || [];
+    return item?.presetOptionId || [];
   };
 
   return (
@@ -183,7 +184,7 @@ export default function Table() {
               <h4>Edit</h4>
             </td>
           </tr>
-          {orderContext?.items?.map((item: ItemType, index: number) => {
+          {orderContext?.items?.map((item: OrderItemType, index: number) => {
             return (
               <>
                 <tr className="order-row">

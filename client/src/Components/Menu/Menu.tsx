@@ -1,7 +1,7 @@
 import React from "react";
 import Section from "./MenuSection";
 import "./Menu.css";
-
+import { SectionType } from "../../types";
 import { useQuery } from "@apollo/client";
 import { GET_SECTIONS } from "../../graphql/section";
 
@@ -10,16 +10,6 @@ import { makeStyles, Theme, useTheme } from "@material-ui/core/styles";
 import AppBar from "@material-ui/core/AppBar";
 import Tabs from "@material-ui/core/Tabs";
 import Tab from "@material-ui/core/Tab";
-
-interface CategoryType {
-  _id: string;
-  name: string;
-}
-interface SectionType {
-  name: string;
-  _id: string;
-  categories: CategoryType[];
-}
 
 function a11yProps(index: any) {
   return {
@@ -99,8 +89,8 @@ export default function Menu(props: any) {
           {sections.map((section: SectionType) => {
             return (
               <Section
-                sectionName={section.name}
-                id={section._id}
+                _id={section._id}
+                name={section.name}
                 categories={section.categories}
               />
             );

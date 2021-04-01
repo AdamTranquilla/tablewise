@@ -1,27 +1,22 @@
-interface OptionOrderType {
-  optionId: string;
+import { OptionOrderType } from "../types";
+
+interface CustomItemType {
   price?: number;
-  name?: string;
+  options: OptionOrderType[];
 }
 
-interface ItemType {
-  itemId: string;
-  seatId: number[];
-  price?: number;
-  name?: string;
-  cartItemId?: string;
-  options?: OptionOrderType[];
-}
-
-const calculatePrice = (item: ItemType, preselect: string[] | undefined) => {
+const calculatePrice = (
+  item: CustomItemType,
+  presetOptionId: string[] | undefined
+) => {
   let price = item.price;
 
   item &&
     item?.options?.forEach((option) => {
-      if (preselect && preselect.indexOf(option.optionId) === -1)
+      if (presetOptionId && presetOptionId.indexOf(option.optionId) === -1)
         price = Number(option.price) + Number(price);
     });
-  console.log("PRICE", preselect);
+  console.log("PRICE", presetOptionId);
   return price;
 };
 
