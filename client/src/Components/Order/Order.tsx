@@ -198,7 +198,13 @@ export default function Table() {
                     <sub>{item.seatId.length}</sub> )
                   </td>
                   <td>
-                    <button onClick={() => removeItem(index)}>X</button>
+                    <button onClick={() => removeItem(index)}>
+                      <img
+                        src="./public/remove.svg"
+                        className="remove-from-order"
+                        alt="Remove"
+                      />
+                    </button>
                   </td>
                 </tr>
                 <tr className="order-details">

@@ -2,7 +2,7 @@ import { OptionOrderType } from "../types";
 
 interface CustomItemType {
   price?: number;
-  options: OptionOrderType[];
+  options?: OptionOrderType[];
 }
 
 const calculatePrice = (
