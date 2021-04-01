@@ -109,7 +109,7 @@ export default function Item({
           <h3 style={{ margin: 0, marginBottom: 5 }}>{name}</h3>
           <h3 style={{ margin: 0, marginBottom: 5 }}>${price}</h3>
           <button className="btn" onClick={() => setShowSplit(true)}>
-            Add to Order
+            <img src="./public/add.svg" className="add-to-order" alt="Add" />
           </button>
         </AccordionBtn>
         <AccordionContent>
