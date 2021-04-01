@@ -11,7 +11,6 @@ const inputOptionType = new GraphQLInputObjectType({
   description: "This represents the Options in a placed order",
   fields: {
     optionId: { type: GraphQLString },
-    quantity: { type: GraphQLInt },
   },
 });
 
@@ -20,7 +19,6 @@ const inputItemType = new GraphQLInputObjectType({
   description: "Options in order",
   fields: {
     itemId: { type: GraphQLString },
-    quantity: { type: GraphQLInt },
     options: { type: new GraphQLList(inputOptionType) },
     seatId: { type: new GraphQLList(GraphQLInt) },
   },

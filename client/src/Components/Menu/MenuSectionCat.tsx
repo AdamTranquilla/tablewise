@@ -1,26 +1,14 @@
 import React from "react";
 import Item from "./MenuSectionCatItem";
+import { ItemType } from "../../types";
 import "./Menu.css";
 import { Accordion, AccordionBtn, AccordionContent } from "./Accordions";
 import { useQuery } from "@apollo/client";
 import { GET_CATEGORY } from "../../graphql/category";
 
 interface CategoryProps {
-  name: string;
   id?: string;
-}
-
-interface OptionType {
   name: string;
-  _id: string;
-  price: Number;
-}
-interface ItemType {
-  _id: string;
-  name: string;
-  price: Number;
-  options: OptionType[];
-  presetOptionId?: String[];
 }
 
 export default function Category({ name, id }: CategoryProps) {
@@ -37,7 +25,6 @@ export default function Category({ name, id }: CategoryProps) {
 
   React.useEffect(() => {
     if (!loading) {
-      // checks if data and category exist
       setItems(data?.category?.items);
     }
   }, [loading]);
@@ -70,7 +57,7 @@ export default function Category({ name, id }: CategoryProps) {
                 name={item.name}
                 price={item.price}
                 options={item.options}
-                preselect={item.presetOptionId}
+                presetOptionId={item.presetOptionId}
               />
             );
           })}

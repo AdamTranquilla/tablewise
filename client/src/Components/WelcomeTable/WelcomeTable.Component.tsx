@@ -2,8 +2,8 @@ import React from "react";
 import "./WelcomeTable.css";
 
 interface WelcomeTableProps {
-  tableNo: Number;
-  seatNo: Number;
+  tableNo: number;
+  seatNo: number;
 }
 
 export default function WelcomeTable({

@@ -1,26 +1,12 @@
-interface OptionOrderType {
-  optionId: String;
-  quantity?: Number;
-  price?: Number;
-  name?: String;
-}
+import { OrderItemType } from "../types";
 
-interface ItemType {
-  itemId: String;
-  quantity: Number;
-  seatId: Number[];
-  price?: Number;
-  name?: String;
-  options?: OptionOrderType[];
-}
-
-export const addToCart = (item: ItemType) => {
+export const addToCart = (item: OrderItemType) => {
   const cartData = JSON.parse(localStorage.getItem("tablewise_cart") || "[]");
   cartData.push(item);
   localStorage.setItem("tablewise_cart", JSON.stringify(cartData));
 };
 
-export const removeFromCart = (index: Number) => {
+export const removeFromCart = (index: number) => {
   const cartData = JSON.parse(localStorage.getItem("tablewise_cart") || "[]");
   cartData.splice(index, 1);
   localStorage.setItem("tablewise_cart", JSON.stringify(cartData));
@@ -34,7 +20,7 @@ export const getCart = () => {
   return JSON.parse(localStorage.getItem("tablewise_cart") || "[]");
 };
 
-export const updateCart = (index: number, data: ItemType) => {
+export const updateCart = (index: number, data: OrderItemType) => {
   const cartData = JSON.parse(localStorage.getItem("tablewise_cart") || "[]");
   cartData[index] = data;
   localStorage.setItem("tablewise_cart", JSON.stringify(cartData));

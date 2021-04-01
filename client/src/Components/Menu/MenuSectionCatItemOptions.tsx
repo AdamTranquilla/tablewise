@@ -1,21 +1,6 @@
 import React from "react";
+import { OptionType } from "../../types";
 import "./Menu.css";
-
-interface OptionOrderType {
-  optionId: String;
-  quantity?: Number;
-  name: String;
-  price: Number;
-}
-
-interface OptionType {
-  _id: String;
-  name: String;
-  price: Number;
-  isSelected: boolean;
-  editOption: (option: OptionOrderType) => void;
-  removeOption: (optionId: String) => void;
-}
 
 export default function Option({
   _id,
@@ -25,7 +10,6 @@ export default function Option({
   removeOption,
   isSelected,
 }: OptionType) {
-  const [quantity, setQuantity] = React.useState(1);
   const [selected, setSelected] = React.useState(isSelected || false);
 
   return (
@@ -36,7 +20,7 @@ export default function Option({
         style={{ marginTop: 5 }}
         onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
           if (e.target.checked) {
-            editOption({ optionId: _id, quantity, name, price });
+            editOption({ optionId: _id, name, price });
           } else {
             removeOption(_id);
           }

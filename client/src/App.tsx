@@ -9,6 +9,7 @@ import {
   HttpLink,
   InMemoryCache,
 } from "@apollo/client";
+import { OrderItemType } from "./types";
 import { OrderContext } from "./context/Order";
 import { getCart } from "./utils/cartStorage";
 import socket from "./utils/socket.io.js";
@@ -19,22 +20,6 @@ const client = new ApolloClient({
   }),
   cache: new InMemoryCache(),
 });
-
-interface OptionOrderType {
-  optionId: String;
-  quantity?: Number;
-  price?: Number;
-  name?: String;
-}
-
-interface ItemType {
-  itemId: String;
-  quantity: Number;
-  seatId: Number[];
-  price?: Number;
-  name?: String;
-  options?: OptionOrderType[];
-}
 
 let seatNo = Number(
   window.location.hash.substr(1, window.location.hash.length)
@@ -59,8 +44,10 @@ function App() {
 }
 
 function AppWithContext() {
-  const [items, _setItems] = React.useState<ItemType[] | undefined>(getCart());
-  const [tableId, setTableId] = React.useState<String>("");
+  const [items, _setItems] = React.useState<OrderItemType[] | undefined>(
+    getCart()
+  );
+  const [tableId, setTableId] = React.useState<string>("");
 
   React.useEffect(() => {
     socket.emit(
@@ -77,7 +64,7 @@ function AppWithContext() {
     );
   }, []);
 
-  const setItems = (actionType: String, item?: ItemType) => {
+  const setItems = (actionType: string, item?: OrderItemType) => {
     if (actionType === "ADD_ITEM") {
       if (item) items?.push(item);
       let _items = items ? [...items] : [];
@@ -93,7 +80,7 @@ function AppWithContext() {
     _setItems(_items);
   };
 
-  const updateItem = (index: number, data: ItemType) => {
+  const updateItem = (index: number, data: OrderItemType) => {
     let _items = items ? [...items] : [];
     _items[index] = data;
     _setItems(_items);

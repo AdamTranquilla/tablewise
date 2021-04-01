@@ -1,6 +1,7 @@
 import React from "react";
 import "./Menu.css";
 import Option from "./MenuSectionCatItemOptions";
+import { OptionOrderType, ItemType } from "../../types";
 import { Accordion, AccordionBtn, AccordionContent } from "./Accordions";
 import { addToCart } from "../../utils/cartStorage";
 import { OrderContext } from "../../context/Order";
@@ -8,48 +9,28 @@ import socket from "../../utils/socket.io.js";
 import Modal from "react-modal";
 import SplitTable from "./SplitTable";
 import { v4 as uuid } from "uuid";
-interface OptionType {
-  _id: String;
-  name: String;
-  price: Number;
-}
-interface ItemType {
-  _id: String;
-  name: String;
-  price: Number;
-  options: Array<OptionType>;
-  preselect?: Array<String>;
-}
-interface OptionOrderType {
-  optionId: String;
-  quantity?: Number;
-  name: String;
-  price: Number;
-}
 
 export default function Item({
   _id,
   name,
   price,
   options,
-  preselect,
+  presetOptionId,
 }: ItemType) {
   const [expanded, setExpanded] = React.useState<string | false>(`panel${_id}`);
-  const [quantity, setQuantity] = React.useState(1);
   const [selectedOptions, setOptions] = React.useState<OptionOrderType[]>([]);
   const context = React.useContext(OrderContext);
   const [showSplit, setShowSplit] = React.useState<boolean>(false);
 
   React.useEffect(() => {
     let preSelectedOptions = options.filter((option) => {
-      return preselect && preselect?.indexOf(option._id) > -1;
+      return presetOptionId && presetOptionId?.indexOf(option._id) > -1;
     });
 
     preSelectedOptions.map((option) => {
       selectedOptions.push({
         name: option.name,
         optionId: option._id,
-        quantity: 1,
         price: option.price,
       });
     });
@@ -66,14 +47,11 @@ export default function Item({
     },
   };
 
-  const editOption = ({ optionId, quantity, name, price }: OptionOrderType) => {
-    if (typeof quantity === "undefined") {
-      quantity = 0;
-    }
-    selectedOptions.push({ optionId, quantity, name, price });
+  const editOption = ({ optionId, name, price }: OptionOrderType) => {
+    selectedOptions.push({ optionId, name, price });
   };
 
-  const removeOption = (optionId: String) => {
+  const removeOption = (optionId: string) => {
     let index = -1;
 
     for (let i = 0; i < selectedOptions.length; i++) {
@@ -86,21 +64,20 @@ export default function Item({
     setOptions([...selectedOptions]);
   };
 
-  const add = (seatIds: Number[]) => {
+  const add = (seatIds: number[]) => {
     let orderItem = {
       itemId: _id,
       cartItemId: uuid(),
-      quantity,
       options: selectedOptions,
       seatId: seatIds,
       name,
       price,
+      presetOptionId,
     };
     if (seatIds.indexOf(context?.seatNo || -1) > -1) {
       addToCart(orderItem);
       context?.setItems("ADD_ITEM", orderItem);
     }
-    setQuantity(1);
     socket.emit("split_bill", {
       item: orderItem,
       splitBy: context?.seatNo,
@@ -120,7 +97,7 @@ export default function Item({
       <Modal isOpen={showSplit} style={customStyles}>
         <SplitTable
           preSelect={context?.seatNo}
-          onClick={(seats: Number[]) => {
+          onClick={(seats: number[]) => {
             setShowSplit(false);
             add(seats);
           }}
@@ -146,8 +123,8 @@ export default function Item({
                   editOption={editOption}
                   removeOption={removeOption}
                   isSelected={
-                    preselect?.indexOf
-                      ? preselect?.indexOf(option._id) > -1
+                    presetOptionId?.indexOf
+                      ? presetOptionId?.indexOf(option._id) > -1
                       : false
                   }
                 />

@@ -22,10 +22,6 @@ const orderSchema = new Schema({
         type: Schema.ObjectId,
         required: [true, "Item Id is required"],
       },
-      quantity: {
-        type: Number,
-        default: 1,
-      },
       seatId: [
         {
           type: Number,
@@ -39,10 +35,6 @@ const orderSchema = new Schema({
       options: [
         {
           optionId: Schema.ObjectId,
-          quantity: {
-            type: Number,
-            default: 0,
-          },
         },
       ],
     },

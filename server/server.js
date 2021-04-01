@@ -233,9 +233,6 @@ const orderItemType = new GraphQLObjectType({
   description: "This represents the Order",
   fields: () => ({
     itemId: { type: GraphQLNonNull(GraphQLString) },
-    quantity: {
-      type: GraphQLNonNull(GraphQLInt),
-    },
     seatId: { type: new GraphQLList(GraphQLNonNull(GraphQLInt)) },
     splitBill: { type: GraphQLFloat },
     options: {
@@ -257,11 +254,8 @@ const orderOptionType = new GraphQLObjectType({
   description: "Options in order",
   fields: () => ({
     id: { type: GraphQLNonNull(GraphQLString) },
-    quantity: {
-      type: GraphQLNonNull(GraphQLInt),
-    },
     resolve: (option) => {
-      return { id: 1, orderItemId: 1, quantity: 1 };
+      return { id: 1, orderItemId: 1 };
     },
   }),
 });

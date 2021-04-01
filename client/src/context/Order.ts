@@ -1,31 +1,15 @@
 import React from "react";
-
-interface OptionOrderType {
-  optionId: String;
-  quantity?: Number;
-  price?: Number;
-  name?: String;
-}
-
-interface ItemType {
-  itemId: String;
-  quantity: Number;
-  seatId: Number[];
-  price?: Number;
-  name?: String;
-  cartItemId?: String;
-  options?: OptionOrderType[];
-}
+import { OrderItemType } from "../types";
 
 export const OrderContext = React.createContext<
   | {
-      items: ItemType[] | undefined;
+      items: OrderItemType[] | undefined;
       removeItem: (index: number) => void;
-      updateItem: (index: number, data: ItemType) => void;
-      tableNo: Number;
-      tableId: String;
-      seatNo: Number;
-      setItems: (action: String, item?: ItemType) => void;
+      updateItem: (index: number, data: OrderItemType) => void;
+      tableNo: number;
+      tableId: string;
+      seatNo: number;
+      setItems: (action: string, item?: OrderItemType) => void;
     }
   | undefined
 >(undefined);

@@ -22,7 +22,6 @@ app.get("/session", function (req, res) {
           description: "Buy Online and pay using Stripe in just one easy step",
           amount: 2000,
           currency: "usd",
-          quantity: 1,
         },
       ],
     },
