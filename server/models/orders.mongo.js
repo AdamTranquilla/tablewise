@@ -1,44 +1,53 @@
 const mongoose = require("mongoose");
 const Schema = mongoose.Schema;
 
-const orderSchema = new Schema({
-  tableId: {
-    type: Number,
-    required: [true, "Table Number is required"],
-  },
-  uniqueTableId: {
-    type: String,
-    required: [true, "Unique table id is required"],
-  },
-  billPaid: [
-    {
+const orderSchema = new Schema(
+  {
+    tableId: {
+      type: Number,
+      required: [true, "Table Number is required"],
+    },
+    uniqueTableId: {
       type: String,
-      default: [],
+      required: [true, "Unique table id is required"],
     },
-  ],
-  orderItems: [
-    {
-      itemId: {
-        type: Schema.ObjectId,
-        required: [true, "Item Id is required"],
+    billPaid: [
+      {
+        type: String,
+        default: [],
       },
-      seatId: [
-        {
+    ],
+    orderItems: [
+      {
+        itemId: {
+          type: Schema.ObjectId,
+          required: [true, "Item Id is required"],
+        },
+        seatId: [
+          {
+            type: Number,
+            default: [],
+          },
+        ],
+        splitBill: {
           type: Number,
-          default: [],
+          required: [true, "Split bill is required"],
         },
-      ],
-      splitBill: {
-        type: Number,
-        required: [true, "Split bill is required"],
+        options: [
+          {
+            optionId: Schema.ObjectId,
+          },
+        ],
       },
-      options: [
-        {
-          optionId: Schema.ObjectId,
-        },
-      ],
+    ],
+    paid: {
+      type: Boolean,
+      default: false,
     },
-  ],
-});
+  },
+  {
+    timestamps: true,
+  }
+);
 
 module.exports = mongoose.model("orders", orderSchema);

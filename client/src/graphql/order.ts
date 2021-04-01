@@ -4,7 +4,7 @@ export const PLACE_ORDER = gql`
   mutation PLACE_ORDER(
     $tableId: Int
     $items: [InputItemType]
-    $uniqueTableId: string!
+    $uniqueTableId: String!
   ) {
     placeOrder(
       tableId: $tableId
@@ -12,6 +12,7 @@ export const PLACE_ORDER = gql`
       uniqueTableId: $uniqueTableId
     ) {
       _id
+      stripeSessionId
     }
   }
 `;

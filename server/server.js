@@ -18,6 +18,7 @@ const _ = require("lodash");
 const { v4: uuidv4 } = require("uuid");
 const { inputItemType } = require("./inputTypes.js");
 const mongoose = require("mongoose");
+const { placeOrder, markAsPaid } = require("./controllers/order.controller");
 require("dotenv").config();
 
 const Category = require("./models/categories.mongo");
@@ -27,7 +28,6 @@ const Order = require("./models/orders.mongo");
 const Section = require("./models/sections.mongo");
 const { getAll, get, create, getById } = require("./transactions");
 const uuid = require("uuid");
-const { placeOrder } = require("./controllers/order.controller");
 
 const users = {};
 
@@ -221,6 +221,7 @@ const orderType = new GraphQLObjectType({
     tableId: {
       type: new GraphQLList(GraphQLInt),
     },
+    stripeSessionId: { type: GraphQLString },
     price: { type: GraphQLNonNull(GraphQLInt) },
     orderItems: {
       type: new GraphQLList(orderItemType),
@@ -414,5 +415,7 @@ app.get("/users", (req, res) => {
 
   res.send(data);
 });
+
+app.get("/order/paid/:orderId", markAsPaid);
 
 http.listen(8001, () => console.log("Server running on PORT 8001"));
