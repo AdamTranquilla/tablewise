@@ -1,7 +1,7 @@
 import React from "react";
 import Section from "./MenuSection";
 import "./Menu.css";
-import { SectionType, OrderItemType } from "../../types";
+import { SectionType, OrderItemType, CartItemType } from "../../types";
 import { useQuery } from "@apollo/client";
 import { GET_SECTIONS } from "../../graphql/section";
 
@@ -51,8 +51,24 @@ export default function Menu(props: any) {
   }, [itemsListQuery.loading]);
 
   React.useEffect(() => {
-    let _cartItems: OrderItemType[] | undefined = cartItems.data?.orderItems;
-    let cartItemsList = [];
+    let _cartItems: CartItemType[] | undefined =
+      cartItems.data?.cart[0]?.orderItems;
+    console.log("CART", _cartItems);
+    let cartItemsList: OrderItemType[] = [];
+    _cartItems?.forEach((cartItem) => {
+      let itemInfo = context?.itemsList?.find((item) => {
+        return item._id === cartItem.itemId;
+      });
+      let item: OrderItemType = {
+        itemId: itemInfo?._id || "",
+        name: itemInfo?.name || "",
+        price: itemInfo?.price || 0,
+        presetOptionId: itemInfo?.presetOptionId || [],
+        seatId: cartItem.seatId,
+      };
+      console.log("ADDING ITEM");
+      context?.setItems("ADD_ITEM", item);
+    });
   }, [cartItems.loading, cartItems.data, itemsListQuery.data]);
 
   React.useEffect(() => {

@@ -50,4 +50,10 @@ export interface TableProps {
   onClick?: (seatId: number) => void;
 }
 
-export interface cartItemType {}
+export interface CartItemType {
+  _id: string;
+  itemId: string;
+  seatId: number[];
+  options: string[];
+  splitBill: number;
+}
