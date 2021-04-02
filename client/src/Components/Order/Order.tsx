@@ -9,12 +9,6 @@ import { addToCart, removeFromCart, updateCart } from "../../utils/cartStorage";
 import socket from "../../utils/socket.io";
 import calculatePrice from "../../utils/priceCalculation";
 
-// interface OptionOrderType {
-//   optionId: string;
-//   price?: number;
-//   name?: string;
-// }
-
 interface ItemType {
   itemId: string;
   name?: string;
@@ -61,6 +55,17 @@ export default function Table() {
     PLACE_ORDER
   );
 
+  var stripe = (window as any).Stripe(
+    "pk_test_51IGaB5BHVMCaND290M3IF5BfsUVX59A1jAXH8WNR8wLydumG1L9Rpj5fnb81sdlp1czOtNpZ1D7ITb0iVoFkrq9500HrIsi9oQ"
+  );
+
+  const payStripe = (sessionId: String) => {
+    console.log("sessionId", sessionId);
+    stripe.redirectToCheckout({
+      sessionId,
+    });
+  };
+
   React.useEffect(() => {
     socket.removeEventListener();
     socket.on("split_bill", function (data: SplitEventResponseType) {
@@ -104,6 +109,7 @@ export default function Table() {
       emptyCart();
       orderContext?.setItems("EMPTY");
       alert(orderContext?.items?.length);
+      payStripe(data.placeOrder.stripeSessionId);
     }
   }, [loading, error, data]);
 

@@ -1,6 +1,7 @@
 export interface CategoryType {
   _id: string;
   name: string;
+  img: string;
 }
 
 export interface SectionType {
@@ -47,4 +48,12 @@ export interface TableProps {
   filledSeats: number[];
   totalSeats: number;
   onClick?: (seatId: number) => void;
+}
+
+export interface CartItemType {
+  _id: string;
+  itemId: string;
+  seatId: number[];
+  options: string[];
+  splitBill: number;
 }

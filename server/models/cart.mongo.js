@@ -1,7 +1,7 @@
 const mongoose = require("mongoose");
 const Schema = mongoose.Schema;
 
-const orderSchema = new Schema(
+const cartSchema = new Schema(
   {
     tableId: {
       type: Number,
@@ -10,14 +10,7 @@ const orderSchema = new Schema(
     uniqueTableId: {
       type: String,
       required: [true, "Unique table id is required"],
-      unique: [true, "Unique Table Id should be unique"],
     },
-    billPaid: [
-      {
-        type: String,
-        default: [],
-      },
-    ],
     orderItems: [
       {
         itemId: {
@@ -41,14 +34,10 @@ const orderSchema = new Schema(
         ],
       },
     ],
-    paid: {
-      type: Boolean,
-      default: false,
-    },
   },
   {
     timestamps: true,
   }
 );
 
-module.exports = mongoose.model("orders", orderSchema);
+module.exports = mongoose.model("cart", cartSchema);

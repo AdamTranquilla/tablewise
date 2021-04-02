@@ -1,5 +1,5 @@
 import React from "react";
-import { OrderItemType } from "../types";
+import { OrderItemType, ItemType } from "../types";
 
 export const OrderContext = React.createContext<
   | {
@@ -10,6 +10,8 @@ export const OrderContext = React.createContext<
       tableId: string;
       seatNo: number;
       setItems: (action: string, item?: OrderItemType) => void;
+      itemsList: ItemType[];
+      setItemsList: (items: ItemType[]) => void;
     }
   | undefined
 >(undefined);

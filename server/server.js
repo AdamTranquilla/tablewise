@@ -18,16 +18,18 @@ const _ = require("lodash");
 const { v4: uuidv4 } = require("uuid");
 const { inputItemType } = require("./inputTypes.js");
 const mongoose = require("mongoose");
+const { placeOrder, markAsPaid } = require("./controllers/order.controller");
+const { addToCart } = require("./controllers/cart.controller");
 require("dotenv").config();
 
 const Category = require("./models/categories.mongo");
 const Option = require("./models/options.mongo");
 const Item = require("./models/items.mongo");
 const Order = require("./models/orders.mongo");
+const Cart = require("./models/cart.mongo");
 const Section = require("./models/sections.mongo");
 const { getAll, get, create, getById } = require("./transactions");
 const uuid = require("uuid");
-const { placeOrder } = require("./controllers/order.controller");
 
 const users = {};
 
@@ -180,6 +182,7 @@ const categoryType = new GraphQLObjectType({
   fields: () => ({
     _id: { type: GraphQLNonNull(GraphQLString) },
     name: { type: GraphQLNonNull(GraphQLString) },
+    img: { type: GraphQLNonNull(GraphQLString) },
     section: {
       type: GraphQLNonNull(sectionType),
       resolve: async (parent, args) => {
@@ -221,10 +224,42 @@ const orderType = new GraphQLObjectType({
     tableId: {
       type: new GraphQLList(GraphQLInt),
     },
+    stripeSessionId: { type: GraphQLString },
     price: { type: GraphQLNonNull(GraphQLInt) },
     orderItems: {
       type: new GraphQLList(orderItemType),
     },
+  }),
+});
+
+const cartType = new GraphQLObjectType({
+  name: "Cart",
+  description: "This represents the cart",
+  fields: () => ({
+    _id: {
+      type: GraphQLString,
+    },
+    uniqueTableId: {
+      type: GraphQLString,
+    },
+    tableId: {
+      type: GraphQLString,
+    },
+    orderItems: {
+      type: new GraphQLList(cartItemType),
+    },
+  }),
+});
+
+const cartItemType = new GraphQLObjectType({
+  name: "CartItem",
+  description: "",
+  fields: () => ({
+    _id: { type: GraphQLString },
+    itemId: { type: GraphQLString },
+    seatId: { type: new GraphQLList(GraphQLInt) },
+    splitBill: { type: GraphQLInt },
+    options: { type: new GraphQLList(GraphQLString) },
   }),
 });
 
@@ -321,6 +356,23 @@ const RootQueryType = new GraphQLObjectType({
         return categories;
       },
     },
+    cart: {
+      type: new GraphQLList(cartType),
+      description: "List of cart items",
+      args: {
+        uniqueTableId: { type: GraphQLString },
+        seatNo: { type: GraphQLInt },
+      },
+      resolve: async (parent, args) => {
+        // find from cart where uniquetableid = .... && seatNo exist in seatIds
+        let cartItems = await Cart.find({
+          uniqueTableId: args.uniqueTableId,
+          "orderItems.seatId": { $in: [args.seatNo] },
+        });
+        console.log(cartItems);
+        return cartItems;
+      },
+    },
     orders: {
       type: new GraphQLList(orderType),
       description: "List of Orders",
@@ -383,8 +435,27 @@ const RootMutationType = new GraphQLObjectType({
         },
       },
       resolve: async (parent, args) => {
-        let res = placeOrder(parent, args);
+        let res = await placeOrder(parent, args);
         return res;
+      },
+    },
+    addToCart: {
+      type: cartType,
+      description: "Add to your table cart",
+      args: {
+        item: {
+          type: GraphQLNonNull(inputItemType),
+        },
+        tableId: {
+          type: GraphQLInt,
+        },
+        uniqueTableId: {
+          type: GraphQLNonNull(GraphQLString),
+        },
+      },
+      resolve: async (parent, args) => {
+        await addToCart(args.uniqueTableId, args.tableId, args.item);
+        return { msg: "Added to cart" };
       },
     },
   }),
@@ -414,5 +485,7 @@ app.get("/users", (req, res) => {
 
   res.send(data);
 });
+
+app.get("/order/paid/:orderId", markAsPaid);
 
 http.listen(8001, () => console.log("Server running on PORT 8001"));

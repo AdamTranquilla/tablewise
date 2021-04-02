@@ -1,6 +1,8 @@
 const Item = require("../models/items.mongo");
 const Order = require("../models/orders.mongo");
+const Option = require("../models/options.mongo");
 const { getById, get, create } = require("../transactions");
+const { getSession } = require("../utils/stripe");
 
 exports.placeOrder = async (parent, args) => {
   let price = 0;
@@ -31,5 +33,17 @@ exports.placeOrder = async (parent, args) => {
     doc = await create(Order, doc);
   });
 
+  let session = await getSession(10, "Test", doc._id);
+  doc.stripeSessionId = session.id;
+
   return doc;
+};
+
+exports.markAsPaid = async function (req, res) {
+  try {
+    await Order.updateOne({ _id: req.params.orderId }, { paid: true });
+    res.send("You have paid for order: " + req.params.orderId);
+  } catch (err) {
+    res.send({ status: "fail", err });
+  }
 };

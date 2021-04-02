@@ -9,6 +9,8 @@ import socket from "../../utils/socket.io.js";
 import Modal from "react-modal";
 import SplitTable from "./SplitTable";
 import { v4 as uuid } from "uuid";
+import { ADD_TO_CART } from "../../graphql/cart";
+import { useMutation } from "@apollo/client";
 
 export default function Item({
   _id,
@@ -21,6 +23,7 @@ export default function Item({
   const [selectedOptions, setOptions] = React.useState<OptionOrderType[]>([]);
   const context = React.useContext(OrderContext);
   const [showSplit, setShowSplit] = React.useState<boolean>(false);
+  const [addToTableCart, cartData] = useMutation(ADD_TO_CART);
 
   React.useEffect(() => {
     let preSelectedOptions = options.filter((option) => {
@@ -74,8 +77,28 @@ export default function Item({
       price,
       presetOptionId,
     };
+    let cartItem = JSON.parse(
+      JSON.stringify({
+        itemId: _id,
+        options: selectedOptions,
+        seatId: seatIds,
+      })
+    );
     if (seatIds.indexOf(context?.seatNo || -1) > -1) {
       addToCart(orderItem);
+
+      cartItem.options.forEach((option: OptionOrderType) => {
+        delete option.price;
+        delete option.name;
+      });
+
+      addToTableCart({
+        variables: {
+          tableId: 1,
+          item: cartItem,
+          uniqueTableId: context?.tableId,
+        },
+      });
       context?.setItems("ADD_ITEM", orderItem);
     }
     socket.emit("split_bill", {
