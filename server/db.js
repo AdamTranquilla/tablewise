@@ -14,17 +14,17 @@ const sections = [
 exports.sections = sections;
 
 const categories = [
-  { id: 1, name: "Salads", sectionId: 1 },
-  { id: 2, name: "Fries", sectionId: 1 },
-  { id: 3, name: "Soups", sectionId: 1 },
-  { id: 4, name: "Sandwiches", sectionId: 2 },
-  { id: 5, name: "Pizzas", sectionId: 2 },
-  { id: 6, name: "Tacos", sectionId: 2 },
-  { id: 7, name: "Cake", sectionId: 3 },
-  { id: 8, name: "Pie", sectionId: 3 },
-  { id: 9, name: "Soda", sectionId: 4 },
-  { id: 10, name: "Cafe", sectionId: 4 },
-  { id: 11, name: "Alchohol", sectionId: 4 },
+  { id: 1, name: "Salads", img: "saladclr.svg", sectionId: 1 },
+  { id: 2, name: "Fries", img: "firesclr.svg", sectionId: 1 },
+  { id: 3, name: "Soups", img: "soupclr.svg", sectionId: 1 },
+  { id: 4, name: "Sandwiches", img: "sandwichclr.svg", sectionId: 2 },
+  { id: 5, name: "Pizzas", img: "pizzaclr.svg", sectionId: 2 },
+  { id: 6, name: "Tacos", img: "tacoclr.svg", sectionId: 2 },
+  { id: 7, name: "Cake", img: "cakeclr.svg", sectionId: 3 },
+  { id: 8, name: "Pie", img: "pieclr.svg", sectionId: 3 },
+  { id: 9, name: "Soda", img: "sodaclr.svg", sectionId: 4 },
+  { id: 10, name: "Cafe", img: "cafeclr.svg", sectionId: 4 },
+  { id: 11, name: "Alchohol", img: "beerclr.svg", sectionId: 4 },
 ];
 exports.categories = categories;
 
@@ -39,7 +39,7 @@ const items = [
   },
   {
     id: 4,
-    name: "Ceaser Salad",
+    name: "Caesar Salad",
     price: 975,
     presetOptionId: [],
     validOptionId: [38, 39],
@@ -116,6 +116,46 @@ const items = [
     presetOptionId: [23],
     validOptionId: [23, 24, 25],
     categoryId: 6,
+  },
+  {
+    id: 3,
+    name: "Fish Tacos",
+    price: 1500,
+    presetOptionId: [23],
+    validOptionId: [23, 24, 25],
+    categoryId: 6,
+  },
+  {
+    id: 14,
+    name: "Chocolate cake",
+    price: 250,
+    presetOptionId: [],
+    validOptionId: [],
+    categoryId: 7,
+  },
+  {
+    id: 13,
+    name: "Carrot cake",
+    price: 250,
+    presetOptionId: [],
+    validOptionId: [],
+    categoryId: 7,
+  },
+  {
+    id: 11,
+    name: "Applie Pie",
+    price: 300,
+    presetOptionId: [],
+    validOptionId: [],
+    categoryId: 8,
+  },
+  {
+    id: 12,
+    name: "Pumpkin Pie",
+    price: 300,
+    presetOptionId: [],
+    validOptionId: [],
+    categoryId: 8,
   },
   {
     id: 7,
@@ -197,38 +237,6 @@ const items = [
     validOptionId: [32],
     categoryId: 9,
   },
-  {
-    id: 11,
-    name: "Applie Pie",
-    price: 300,
-    presetOptionId: [],
-    validOptionId: [],
-    categoryId: 7,
-  },
-  {
-    id: 12,
-    name: "Pumpkin Pie",
-    price: 300,
-    presetOptionId: [],
-    validOptionId: [],
-    categoryId: 7,
-  },
-  {
-    id: 14,
-    name: "Chocolate cake",
-    price: 250,
-    presetOptionId: [],
-    validOptionId: [],
-    categoryId: 8,
-  },
-  {
-    id: 13,
-    name: "Carrot cake",
-    price: 250,
-    presetOptionId: [],
-    validOptionId: [],
-    categoryId: 8,
-  },
 ];
 exports.items = items;
 
@@ -287,6 +295,7 @@ exports.orders = [];
 //   const _categories = categories.map((cat) => {
 //     return {
 //       name: cat.name,
+//       img: cat.img,
 //       sectionId: sections[cat.sectionId - 1]._id,
 //     };
 //   });

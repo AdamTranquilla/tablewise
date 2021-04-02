@@ -9,8 +9,6 @@ const calculatePrice = (
   item: CustomItemType,
   presetOptionId: string[] | undefined
 ) => {
-  debugger;
-
   let price = item.price;
 
   item &&

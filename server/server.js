@@ -19,6 +19,7 @@ const { v4: uuidv4 } = require("uuid");
 const { inputItemType } = require("./inputTypes.js");
 const mongoose = require("mongoose");
 const { placeOrder, markAsPaid } = require("./controllers/order.controller");
+const { addToCart } = require("./controllers/cart.controller");
 require("dotenv").config();
 
 const Category = require("./models/categories.mongo");
@@ -229,6 +230,16 @@ const orderType = new GraphQLObjectType({
   }),
 });
 
+const cartType = new GraphQLObjectType({
+  name: "Cart",
+  description: "This represents the cart",
+  fields: () => ({
+    message: {
+      type: GraphQLString,
+    },
+  }),
+});
+
 const orderItemType = new GraphQLObjectType({
   name: "OrderItem",
   description: "This represents the Order",
@@ -384,8 +395,27 @@ const RootMutationType = new GraphQLObjectType({
         },
       },
       resolve: async (parent, args) => {
-        let res = placeOrder(parent, args);
+        let res = await placeOrder(parent, args);
         return res;
+      },
+    },
+    addToCart: {
+      type: cartType,
+      description: "Add to your table cart",
+      args: {
+        item: {
+          type: GraphQLNonNull(inputItemType),
+        },
+        tableId: {
+          type: GraphQLInt,
+        },
+        uniqueTableId: {
+          type: GraphQLNonNull(GraphQLString),
+        },
+      },
+      resolve: async (parent, args) => {
+        await addToCart(args.uniqueTableId, args.tableId, args.item);
+        return { msg: "Added to cart" };
       },
     },
   }),
