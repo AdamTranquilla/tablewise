@@ -1,7 +1,7 @@
 import React from "react";
 import Section from "./MenuSection";
 import "./Menu.css";
-import { SectionType } from "../../types";
+import { SectionType, OrderItemType } from "../../types";
 import { useQuery } from "@apollo/client";
 import { GET_SECTIONS } from "../../graphql/section";
 
@@ -10,6 +10,9 @@ import { makeStyles, Theme, useTheme } from "@material-ui/core/styles";
 import AppBar from "@material-ui/core/AppBar";
 import Tabs from "@material-ui/core/Tabs";
 import Tab from "@material-ui/core/Tab";
+import { GET_CART } from "../../graphql/cart";
+import { GET_ITEMS } from "../../graphql/items";
+import { OrderContext } from "../../context/Order";
 
 function a11yProps(index: any) {
   return {
@@ -31,6 +34,26 @@ export default function Menu(props: any) {
   const [value, setValue] = React.useState(0);
   const [sections, setSections] = React.useState([]);
   const { loading, data, error } = useQuery(GET_SECTIONS);
+  const itemsListQuery = useQuery(GET_ITEMS);
+  const context = React.useContext(OrderContext);
+
+  const cartItems = useQuery(GET_CART, {
+    variables: {
+      seatNo: context?.seatNo,
+      uniqueTableId: context?.tableId,
+    },
+  });
+
+  React.useEffect(() => {
+    if (!itemsListQuery.error) {
+      context?.setItemsList(itemsListQuery.data?.items);
+    }
+  }, [itemsListQuery.loading]);
+
+  React.useEffect(() => {
+    let _cartItems: OrderItemType[] | undefined = cartItems.data?.orderItems;
+    let cartItemsList = [];
+  }, [cartItems.loading, cartItems.data, itemsListQuery.data]);
 
   React.useEffect(() => {
     if (!loading && data) {
@@ -63,7 +86,7 @@ export default function Menu(props: any) {
   if (error) {
     return <p> Some error occurred </p>;
   }
-
+  console.log("FROM CONTEXT", context?.itemsList);
   return (
     <div id="menu-container">
       <div className={classes.root}>

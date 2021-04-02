@@ -1,6 +1,6 @@
 import React from "react";
 import Item from "./MenuSectionCatItem";
-import { ItemType } from "../../types";
+import { ItemType, CategoryType } from "../../types";
 import "./Menu.css";
 import { Accordion, AccordionBtn, AccordionContent } from "./Accordions";
 import { useQuery } from "@apollo/client";
@@ -9,6 +9,7 @@ import { GET_CATEGORY } from "../../graphql/category";
 interface CategoryProps {
   id?: string;
   name: string;
+  img: string;
 }
 
 export default function Category({ name, id }: CategoryProps) {

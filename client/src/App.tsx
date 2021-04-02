@@ -9,7 +9,7 @@ import {
   HttpLink,
   InMemoryCache,
 } from "@apollo/client";
-import { OrderItemType } from "./types";
+import { OrderItemType, ItemType } from "./types";
 import { OrderContext } from "./context/Order";
 import { getCart } from "./utils/cartStorage";
 import socket from "./utils/socket.io.js";
@@ -47,6 +47,7 @@ function AppWithContext() {
   const [items, _setItems] = React.useState<OrderItemType[] | undefined>(
     getCart()
   );
+  const [itemsList, _setItemsList] = React.useState<ItemType[]>([]);
   const [tableId, setTableId] = React.useState<string>("");
 
   React.useEffect(() => {
@@ -54,11 +55,6 @@ function AppWithContext() {
       "join",
       { table: tableNo, seat: seatNo },
       function (err: boolean, data: any) {
-        console.clear();
-        console.log("TABLEID", err, data);
-        if (err) {
-          alert(err);
-        }
         setTableId(data.data.tableId);
       }
     );
@@ -72,6 +68,10 @@ function AppWithContext() {
     } else if (actionType === "EMPTY") {
       _setItems([]);
     }
+  };
+
+  const setItemsList = (list: ItemType[]) => {
+    _setItemsList(list);
   };
 
   const removeItem = (index: number) => {
@@ -96,6 +96,8 @@ function AppWithContext() {
         seatNo,
         tableNo,
         tableId,
+        itemsList,
+        setItemsList,
       }}
     >
       <App />

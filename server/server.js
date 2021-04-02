@@ -26,6 +26,7 @@ const Category = require("./models/categories.mongo");
 const Option = require("./models/options.mongo");
 const Item = require("./models/items.mongo");
 const Order = require("./models/orders.mongo");
+const Cart = require("./models/cart.mongo");
 const Section = require("./models/sections.mongo");
 const { getAll, get, create, getById } = require("./transactions");
 const uuid = require("uuid");
@@ -181,6 +182,7 @@ const categoryType = new GraphQLObjectType({
   fields: () => ({
     _id: { type: GraphQLNonNull(GraphQLString) },
     name: { type: GraphQLNonNull(GraphQLString) },
+    img: { type: GraphQLNonNull(GraphQLString) },
     section: {
       type: GraphQLNonNull(sectionType),
       resolve: async (parent, args) => {
@@ -234,9 +236,30 @@ const cartType = new GraphQLObjectType({
   name: "Cart",
   description: "This represents the cart",
   fields: () => ({
-    message: {
+    _id: {
       type: GraphQLString,
     },
+    uniqueTableId: {
+      type: GraphQLString,
+    },
+    tableId: {
+      type: GraphQLString,
+    },
+    orderItems: {
+      type: new GraphQLList(cartItemType),
+    },
+  }),
+});
+
+const cartItemType = new GraphQLObjectType({
+  name: "CartItem",
+  description: "",
+  fields: () => ({
+    _id: { type: GraphQLString },
+    itemId: { type: GraphQLString },
+    seatId: { type: new GraphQLList(GraphQLInt) },
+    splitBill: { type: GraphQLInt },
+    options: { type: new GraphQLList(GraphQLString) },
   }),
 });
 
@@ -331,6 +354,23 @@ const RootQueryType = new GraphQLObjectType({
       resolve: async () => {
         let categories = await getAll(Category);
         return categories;
+      },
+    },
+    cart: {
+      type: new GraphQLList(cartType),
+      description: "List of cart items",
+      args: {
+        uniqueTableId: { type: GraphQLString },
+        seatNo: { type: GraphQLInt },
+      },
+      resolve: async (parent, args) => {
+        // find from cart where uniquetableid = .... && seatNo exist in seatIds
+        let cartItems = await Cart.find({
+          uniqueTableId: args.uniqueTableId,
+          "orderItems.seatId": { $in: [args.seatNo] },
+        });
+        console.log(cartItems);
+        return cartItems;
       },
     },
     orders: {
