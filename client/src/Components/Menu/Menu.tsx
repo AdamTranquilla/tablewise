@@ -58,12 +58,13 @@ export default function Menu(props: any) {
       let itemInfo = context?.itemsList?.find((item) => {
         return item._id === cartItem.itemId;
       });
+      console.log("TYPE", Array.isArray(cartItem.seatId));
       let item: OrderItemType = {
         itemId: itemInfo?._id || "",
         name: itemInfo?.name || "",
         price: itemInfo?.price || 0,
         presetOptionId: itemInfo?.presetOptionId || [],
-        seatId: cartItem.seatId,
+        seatId: cartItem.seatId.map((seat) => seat),
         cartItemId: cartItem.uniqueItemId,
       };
       console.log("ADDING ITEM", item);

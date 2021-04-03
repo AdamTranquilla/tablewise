@@ -41,6 +41,8 @@ exports.placeOrder = async (parent, args) => {
 
 exports.markAsPaid = async function (req, res) {
   try {
+    // JSON token verification
+    // jwt
     await Order.updateOne({ _id: req.params.orderId }, { paid: true });
     res.send("You have paid for order: " + req.params.orderId);
   } catch (err) {
