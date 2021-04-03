@@ -105,11 +105,15 @@ appIo.on("connection", function (socket) {
 
   socket.on("item_removed", function (data) {
     data.seatIds.forEach((seatId) => {
-      if (users[data.table] && users[data.table][seatId])
+      if (users[data.table] && users[data.table][seatId]) console.log(data);
+      if (users[data.table][seatId]) {
         users[data.table][seatId].emit("item_removed", {
           itemUUID: data.itemUUID,
           seatId,
         });
+      } else {
+        console.log("SEAT ID", seatId);
+      }
     });
   });
 });
@@ -258,8 +262,17 @@ const cartItemType = new GraphQLObjectType({
     _id: { type: GraphQLString },
     itemId: { type: GraphQLString },
     seatId: { type: new GraphQLList(GraphQLInt) },
-    splitBill: { type: GraphQLInt },
-    options: { type: new GraphQLList(GraphQLString) },
+    splitBill: { type: GraphQLFloat },
+    uniqueItemId: { type: GraphQLString },
+    options: { type: new GraphQLList(cartOptionType) },
+  }),
+});
+
+const cartOptionType = new GraphQLObjectType({
+  name: "CartOptionType",
+  description: "",
+  fields: () => ({
+    optionId: { type: GraphQLString },
   }),
 });
 
@@ -369,7 +382,7 @@ const RootQueryType = new GraphQLObjectType({
           uniqueTableId: args.uniqueTableId,
           "orderItems.seatId": { $in: [args.seatNo] },
         });
-        console.log(cartItems);
+        console.log(args.uniqueTableId, cartItems.length);
         return cartItems;
       },
     },

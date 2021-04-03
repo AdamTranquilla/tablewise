@@ -17,6 +17,9 @@ const cartSchema = new Schema(
           type: Schema.ObjectId,
           required: [true, "Item Id is required"],
         },
+        uniqueItemId: {
+          type: String,
+        },
         seatId: [
           {
             type: Number,
@@ -29,7 +32,9 @@ const cartSchema = new Schema(
         },
         options: [
           {
-            optionId: Schema.ObjectId,
+            optionId: {
+              type: String,
+            },
           },
         ],
       },

@@ -53,7 +53,6 @@ export default function Menu(props: any) {
   React.useEffect(() => {
     let _cartItems: CartItemType[] | undefined =
       cartItems.data?.cart[0]?.orderItems;
-    console.log("CART", _cartItems);
     let cartItemsList: OrderItemType[] = [];
     _cartItems?.forEach((cartItem) => {
       let itemInfo = context?.itemsList?.find((item) => {
@@ -65,8 +64,9 @@ export default function Menu(props: any) {
         price: itemInfo?.price || 0,
         presetOptionId: itemInfo?.presetOptionId || [],
         seatId: cartItem.seatId,
+        cartItemId: cartItem.uniqueItemId,
       };
-      console.log("ADDING ITEM");
+      console.log("ADDING ITEM", item);
       context?.setItems("ADD_ITEM", item);
     });
   }, [cartItems.loading, cartItems.data, itemsListQuery.data]);

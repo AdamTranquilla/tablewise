@@ -27,13 +27,11 @@ const addToCart = async (uniqueTableId, tableId, orderItem) => {
         orderItems: [orderItem],
       });
       await cart.save();
-      console.log("SACING");
     } else {
       let d = await Cart.updateOne(
         { uniqueTableId },
         { $push: { orderItems: orderItem } }
       );
-      console.log("DDDD");
     }
   } catch (err) {
     throw err;

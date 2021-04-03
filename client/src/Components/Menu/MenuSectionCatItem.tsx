@@ -80,10 +80,22 @@ export default function Item({
     let cartItem = JSON.parse(
       JSON.stringify({
         itemId: _id,
-        options: selectedOptions,
+        uniqueItemId: orderItem.cartItemId,
+        options: selectedOptions.map((option) => ({
+          optionId: option.optionId,
+        })),
         seatId: seatIds,
       })
     );
+
+    addToTableCart({
+      variables: {
+        tableId: 1,
+        item: cartItem,
+        uniqueTableId: context?.tableId,
+      },
+    });
+
     if (seatIds.indexOf(context?.seatNo || -1) > -1) {
       addToCart(orderItem);
 
@@ -92,13 +104,6 @@ export default function Item({
         delete option.name;
       });
 
-      addToTableCart({
-        variables: {
-          tableId: 1,
-          item: cartItem,
-          uniqueTableId: context?.tableId,
-        },
-      });
       context?.setItems("ADD_ITEM", orderItem);
     }
     socket.emit("split_bill", {

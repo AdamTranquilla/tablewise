@@ -77,7 +77,7 @@ export default function Table() {
     socket.on("item_removed", function (data: RemoveEventResponseType) {
       let index: number = -1;
       let length = orderContext?.items?.length || 0;
-
+      console.log("REM", data);
       for (let i = 0; i < length; i++) {
         if (
           orderContext?.items &&
@@ -92,11 +92,12 @@ export default function Table() {
         let updatedItem = orderContext?.items
           ? orderContext?.items[index]
           : null;
-
-        updatedItem?.seatId?.splice(
-          updatedItem?.seatId?.indexOf(data.seatId),
-          1
+        console.log("UPDATED ITEM", updatedItem);
+        const seatIndex: number | undefined = updatedItem?.seatId?.indexOf(
+          data.seatId
         );
+        console.log("SEAT", seatIndex);
+        updatedItem?.seatId?.splice(seatIndex || -1, 1);
 
         updatedItem !== null && orderContext?.updateItem(index, updatedItem);
         updatedItem !== null && updateCart(index, updatedItem);
