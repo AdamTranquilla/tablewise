@@ -30,6 +30,7 @@ const Cart = require("./models/cart.mongo");
 const Section = require("./models/sections.mongo");
 const { getAll, get, create, getById } = require("./transactions");
 const uuid = require("uuid");
+const { removeFromCart } = require("./controllers/cart.controller");
 
 const users = {};
 
@@ -98,18 +99,20 @@ appIo.on("connection", function (socket) {
           splitBy,
           perSeatPrice,
         });
-        appIo.to(_socket.id).emit("test_event", "hello world");
       }
     }
   });
 
-  socket.on("item_removed", function (data) {
+  socket.on("item_removed", async function (data) {
+    await removeFromCart(data.itemUUID, data.seatNo);
+    console.log("Remove Item: ", data.itemUUID, data.seatNo);
     data.seatIds.forEach((seatId) => {
-      if (users[data.table] && users[data.table][seatId])
+      if (users[data.table] && users[data.table][seatId]) {
         users[data.table][seatId].emit("item_removed", {
           itemUUID: data.itemUUID,
           seatId,
         });
+      }
     });
   });
 });
@@ -258,8 +261,17 @@ const cartItemType = new GraphQLObjectType({
     _id: { type: GraphQLString },
     itemId: { type: GraphQLString },
     seatId: { type: new GraphQLList(GraphQLInt) },
-    splitBill: { type: GraphQLInt },
-    options: { type: new GraphQLList(GraphQLString) },
+    splitBill: { type: GraphQLFloat },
+    uniqueItemId: { type: GraphQLString },
+    options: { type: new GraphQLList(cartOptionType) },
+  }),
+});
+
+const cartOptionType = new GraphQLObjectType({
+  name: "CartOptionType",
+  description: "",
+  fields: () => ({
+    optionId: { type: GraphQLString },
   }),
 });
 
@@ -369,7 +381,7 @@ const RootQueryType = new GraphQLObjectType({
           uniqueTableId: args.uniqueTableId,
           "orderItems.seatId": { $in: [args.seatNo] },
         });
-        console.log(cartItems);
+        console.log(args.uniqueTableId, cartItems.length);
         return cartItems;
       },
     },

@@ -27,19 +27,32 @@ const addToCart = async (uniqueTableId, tableId, orderItem) => {
         orderItems: [orderItem],
       });
       await cart.save();
-      console.log("SACING");
     } else {
       let d = await Cart.updateOne(
         { uniqueTableId },
         { $push: { orderItems: orderItem } }
       );
-      console.log("DDDD");
     }
   } catch (err) {
     throw err;
   }
 };
 
+const removeFromCart = async (uniqueItemId, seatId) => {
+  try {
+    console.log("SEAT CONTROLLER", seatId);
+    let doc = await Cart.updateOne(
+      {
+        "orderItems.uniqueItemId": uniqueItemId,
+      },
+      { $pull: { "orderItems.$.seatId": seatId } }
+    );
+    console.log("Doc", doc);
+  } catch (err) {
+    throw err;
+  }
+};
 module.exports = {
   addToCart,
+  removeFromCart,
 };

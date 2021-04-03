@@ -77,7 +77,7 @@ export default function Table() {
     socket.on("item_removed", function (data: RemoveEventResponseType) {
       let index: number = -1;
       let length = orderContext?.items?.length || 0;
-
+      console.log("REM", data);
       for (let i = 0; i < length; i++) {
         if (
           orderContext?.items &&
@@ -92,11 +92,10 @@ export default function Table() {
         let updatedItem = orderContext?.items
           ? orderContext?.items[index]
           : null;
-
-        updatedItem?.seatId?.splice(
-          updatedItem?.seatId?.indexOf(data.seatId),
-          1
+        const seatIndex: number | undefined = updatedItem?.seatId?.indexOf(
+          data.seatId
         );
+        updatedItem?.seatId?.splice(seatIndex || -1, 1);
 
         updatedItem !== null && orderContext?.updateItem(index, updatedItem);
         updatedItem !== null && updateCart(index, updatedItem);
@@ -136,6 +135,7 @@ export default function Table() {
         itemUUID: item?.cartItemId,
         seatIds: item?.seatId,
         table: orderContext?.tableNo,
+        seatNo: orderContext?.seatNo,
       });
     }
 
@@ -147,15 +147,26 @@ export default function Table() {
     let item;
     for (
       let i = 0;
-      i < (orderContext?.items ? orderContext?.items?.length : 0);
+      i < (orderContext?.itemsList ? orderContext?.itemsList?.length : 0);
       i++
     ) {
-      if (orderContext?.items && orderContext?.items[i].itemId === id) {
-        item = orderContext?.items ? orderContext?.items[i] : {};
+      if (orderContext?.itemsList && orderContext?.itemsList[i]._id === id) {
+        item = orderContext?.itemsList ? orderContext?.itemsList[i] : {};
         break;
       }
     }
+
     return item?.presetOptionId || [];
+  };
+
+  const getTotalPrice = () => {
+    let total: number = 0;
+    orderContext?.items?.forEach((item) => {
+      total +=
+        (calculatePrice(item, getPreselectFromContext(item?.itemId)) || 0) /
+        (item?.seatId?.length || 1);
+    });
+    return total.toFixed(2);
   };
 
   return (
@@ -225,7 +236,7 @@ export default function Table() {
           })}
           <tr className="order-footer">
             <td>Total</td>
-            <td>$ ??.??</td>
+            <td>{getTotalPrice()}</td>
             <td></td>
           </tr>
         </table>

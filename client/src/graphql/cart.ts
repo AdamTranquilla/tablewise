@@ -20,7 +20,10 @@ export const GET_CART = gql`
       tableId
       orderItems {
         itemId
-        options
+        uniqueItemId
+        options {
+          optionId
+        }
         seatId
         splitBill
       }

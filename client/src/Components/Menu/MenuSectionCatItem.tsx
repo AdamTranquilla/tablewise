@@ -11,6 +11,7 @@ import SplitTable from "./SplitTable";
 import { v4 as uuid } from "uuid";
 import { ADD_TO_CART } from "../../graphql/cart";
 import { useMutation } from "@apollo/client";
+import addIcon from "../../public/seatEmpty.png";
 
 export default function Item({
   _id,
@@ -80,10 +81,22 @@ export default function Item({
     let cartItem = JSON.parse(
       JSON.stringify({
         itemId: _id,
-        options: selectedOptions,
+        uniqueItemId: orderItem.cartItemId,
+        options: selectedOptions.map((option) => ({
+          optionId: option.optionId,
+        })),
         seatId: seatIds,
       })
     );
+
+    addToTableCart({
+      variables: {
+        tableId: 1,
+        item: cartItem,
+        uniqueTableId: context?.tableId,
+      },
+    });
+
     if (seatIds.indexOf(context?.seatNo || -1) > -1) {
       addToCart(orderItem);
 
@@ -92,13 +105,6 @@ export default function Item({
         delete option.name;
       });
 
-      addToTableCart({
-        variables: {
-          tableId: 1,
-          item: cartItem,
-          uniqueTableId: context?.tableId,
-        },
-      });
       context?.setItems("ADD_ITEM", orderItem);
     }
     socket.emit("split_bill", {
@@ -132,7 +138,12 @@ export default function Item({
           <h3 style={{ margin: 0, marginBottom: 5 }}>{name}</h3>
           <h3 style={{ margin: 0, marginBottom: 5 }}>${price}</h3>
           <button className="btn" onClick={() => setShowSplit(true)}>
-            <img src="./public/add.svg" className="add-to-order" alt="Add" />
+            <img
+              src="./add.svg"
+              style={{ width: 40, height: 40 }}
+              className="add-to-order"
+              alt="Add"
+            />
           </button>
         </AccordionBtn>
         <AccordionContent>

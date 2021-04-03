@@ -56,4 +56,5 @@ export interface CartItemType {
   seatId: number[];
   options: string[];
   splitBill: number;
+  uniqueItemId?: string;
 }
