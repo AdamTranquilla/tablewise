@@ -54,11 +54,10 @@ export default function Menu(props: any) {
     let _cartItems: CartItemType[] | undefined =
       cartItems.data?.cart[0]?.orderItems;
     let cartItemsList: OrderItemType[] = [];
-    _cartItems?.forEach((cartItem) => {
+    _cartItems?.forEach((cartItem: CartItemType) => {
       let itemInfo = context?.itemsList?.find((item) => {
         return item._id === cartItem.itemId;
       });
-      console.log("TYPE", Array.isArray(cartItem.seatId));
       let item: OrderItemType = {
         itemId: itemInfo?._id || "",
         name: itemInfo?.name || "",
@@ -66,8 +65,17 @@ export default function Menu(props: any) {
         presetOptionId: itemInfo?.presetOptionId || [],
         seatId: cartItem.seatId.map((seat) => seat),
         cartItemId: cartItem.uniqueItemId,
+        options: cartItem?.options?.map((option) => {
+          let selectedOption = itemInfo?.options?.find(
+            (itemOption) => itemOption._id === option.optionId
+          );
+          return {
+            optionId: option.optionId,
+            price: selectedOption?.price,
+            name: selectedOption?.name,
+          };
+        }),
       };
-      console.log("ADDING ITEM", item);
       context?.setItems("ADD_ITEM", item);
     });
   }, [cartItems.loading, cartItems.data, itemsListQuery.data]);

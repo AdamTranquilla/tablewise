@@ -94,12 +94,36 @@ const items = [
     categoryId: 3,
   },
   {
+    id: 99,
+    name: "Classic BLT",
+    price: 1250,
+    presetOptionId: [39, 8, 7, 19],
+    validOptionId: [39, 8, 7, 19, 38, 13],
+    categoryId: 4,
+  },
+  {
     id: 1,
     name: "Classic Burger",
     price: 1250,
     presetOptionId: [7, 8, 9, 10, 11, 12],
     validOptionId: [7, 8, 9, 10, 11, 12],
     categoryId: 4,
+  },
+  {
+    id: 2,
+    name: "Margherita Pizza",
+    price: 2200,
+    presetOptionId: [1, 7],
+    validOptionId: [1, 2, 3, 4, 5, 6, 7],
+    categoryId: 5,
+  },
+  {
+    id: 2,
+    name: "Pepperoni Pizza",
+    price: 2200,
+    presetOptionId: [1, 2, 7],
+    validOptionId: [1, 2, 3, 4, 5, 6],
+    categoryId: 5,
   },
   {
     id: 2,
@@ -111,7 +135,7 @@ const items = [
   },
   {
     id: 3,
-    name: "Fish Tacos",
+    name: "Surf Tacos",
     price: 1500,
     presetOptionId: [23],
     validOptionId: [23, 24, 25],
@@ -119,10 +143,10 @@ const items = [
   },
   {
     id: 3,
-    name: "Fish Tacos",
+    name: "Turf Tacos",
     price: 1500,
-    presetOptionId: [23],
-    validOptionId: [23, 24, 25],
+    presetOptionId: [38],
+    validOptionId: [38, 40, 41],
     categoryId: 6,
   },
   {
@@ -185,8 +209,8 @@ const items = [
     id: 8,
     name: "Tea",
     price: 100,
-    presetOptionId: [26, 27, 28],
-    validOptionId: [26],
+    presetOptionId: [26],
+    validOptionId: [26, 27, 28],
     categoryId: 10,
   },
   {
@@ -242,7 +266,7 @@ exports.items = items;
 
 const options = [
   { id: 1, name: "Mozzarella", price: 100 },
-  { id: 2, name: "Pepperonni", price: 100 },
+  { id: 2, name: "Pepperoni", price: 100 },
   { id: 3, name: "Pineapple", price: 100 },
   { id: 4, name: "Green Peppers", price: 100 },
   { id: 5, name: "Mushrooms", price: 100 },
@@ -280,6 +304,8 @@ const options = [
   { id: 37, name: "Shiraz", price: 0 },
   { id: 38, name: "Chicken", price: 300 },
   { id: 39, name: "Bacon", price: 300 },
+  { id: 40, name: "Beef", price: 300 },
+  { id: 41, name: "Pulled Pork", price: 300 },
 ];
 exports.options = options;
 
