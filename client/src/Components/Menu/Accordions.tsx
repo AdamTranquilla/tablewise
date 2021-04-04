@@ -24,14 +24,14 @@ export const AccordionBtn = withStyles({
   root: {
     backgroundColor: "rgba(0, 0, 0, .07)",
     // border: "1px solid rgba(0, 0, 0, .125)",
-    minHeight: 56,
+    minHeight: 30,
     "&$expanded": {
-      minHeight: 56,
+      minHeight: 5,
     },
   },
   content: {
     "&$expanded": {
-      margin: "12px 0",
+      margin: "6px 0",
     },
   },
   expanded: {},
@@ -39,6 +39,6 @@ export const AccordionBtn = withStyles({
 
 export const AccordionContent = withStyles((theme) => ({
   root: {
-    padding: theme.spacing(2),
+    padding: 5,
   },
 }))(MuiAccordionDetails);

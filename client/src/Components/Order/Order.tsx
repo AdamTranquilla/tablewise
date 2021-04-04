@@ -107,7 +107,7 @@ export default function Table() {
     if (!loading && data) {
       emptyCart();
       orderContext?.setItems("EMPTY");
-      alert(orderContext?.items?.length);
+      // alert(orderContext?.items?.length);
       payStripe(data.placeOrder.stripeSessionId);
     }
   }, [loading, error, data]);
@@ -175,7 +175,7 @@ export default function Table() {
         <h3>Bill: Seat #1</h3>
         <button
           onClick={() => {
-            alert(orderContext?.tableId);
+            // alert(orderContext?.tableId);
             placeOrderHandler({
               variables: {
                 tableId: 1,
@@ -194,6 +194,9 @@ export default function Table() {
             <td className="order-items">
               <h4>Item</h4>
             </td>
+            <td className="order-split">
+              <h4>Share</h4>
+            </td>
             <td className="order-rate">
               <h4>Sub-Total</h4>
             </td>
@@ -207,18 +210,21 @@ export default function Table() {
                 <tr className="order-row">
                   <td>{item.name}</td>
                   <td>
+                    <sup>1</sup>&frasl;
+                    <sub>{item.seatId.length}</sub>
+                  </td>
+                  <td>
                     $
                     {Number(
                       calculatePrice(item, getPreselectFromContext(item.itemId))
                     ) / item.seatId.length}
-                    ( <sup>1</sup>&frasl;
-                    <sub>{item.seatId.length}</sub> )
                   </td>
                   <td>
-                    <button onClick={() => removeItem(index)}>
+                    <button className="btn" onClick={() => removeItem(index)}>
                       <img
-                        src="./public/remove.svg"
-                        className="remove-from-order"
+                        src="./remove.svg"
+                        style={{ width: 20, height: 20 }}
+                        className="remove-btn"
                         alt="Remove"
                       />
                     </button>
@@ -236,7 +242,8 @@ export default function Table() {
           })}
           <tr className="order-footer">
             <td>Total</td>
-            <td>{getTotalPrice()}</td>
+            <td></td>
+            <td>$ {getTotalPrice()}</td>
             <td></td>
           </tr>
         </table>

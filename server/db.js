@@ -15,7 +15,7 @@ exports.sections = sections;
 
 const categories = [
   { id: 1, name: "Salads", img: "saladclr.svg", sectionId: 1 },
-  { id: 2, name: "Fries", img: "firesclr.svg", sectionId: 1 },
+  { id: 2, name: "Fries", img: "friesclr.svg", sectionId: 1 },
   { id: 3, name: "Soups", img: "soupclr.svg", sectionId: 1 },
   { id: 4, name: "Sandwiches", img: "sandwichclr.svg", sectionId: 2 },
   { id: 5, name: "Pizzas", img: "pizzaclr.svg", sectionId: 2 },
