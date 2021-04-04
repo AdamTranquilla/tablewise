@@ -500,4 +500,6 @@ app.get("/users", (req, res) => {
 
 app.get("/order/paid/:orderId", markAsPaid);
 
-http.listen(8001, () => console.log("Server running on PORT 8001"));
+http.listen(process.env.PORT || 8001, () =>
+  console.log("Server running on PORT 8001")
+);
