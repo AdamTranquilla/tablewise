@@ -51,6 +51,7 @@ appIo.on("connection", function (socket) {
     let seats = Object.keys(users[data.table] || {});
     if (seats.length == 0) {
       socket.tableId = uuid.v4();
+      console.log(socket.tableId);
     } else {
       socket.tableId = users[data.table][seats[0]].tableId;
     }
@@ -105,7 +106,6 @@ appIo.on("connection", function (socket) {
 
   socket.on("item_removed", async function (data) {
     await removeFromCart(data.itemUUID, data.seatNo);
-    console.log("Remove Item: ", data.itemUUID, data.seatNo);
     data.seatIds.forEach((seatId) => {
       if (users[data.table] && users[data.table][seatId]) {
         users[data.table][seatId].emit("item_removed", {
@@ -117,11 +117,14 @@ appIo.on("connection", function (socket) {
   });
 });
 
-mongoose.connect("mongodb://localhost:27017/development", {
-  useNewUrlParser: true,
-  useUnifiedTopology: true,
-  useCreateIndex: true,
-});
+mongoose.connect(
+  process.env.MONGODB_URI || "mongodb://localhost:27017/development",
+  {
+    useNewUrlParser: true,
+    useUnifiedTopology: true,
+    useCreateIndex: true,
+  }
+);
 
 mongoose.connection.once("open", () => {
   console.log("Connected to Mongo DB");
@@ -381,7 +384,7 @@ const RootQueryType = new GraphQLObjectType({
           uniqueTableId: args.uniqueTableId,
           "orderItems.seatId": { $in: [args.seatNo] },
         });
-        console.log(args.uniqueTableId, cartItems.length);
+        //console.log(args.uniqueTableId, cartItems[0].orderItems.length);
         return cartItems;
       },
     },
@@ -500,4 +503,6 @@ app.get("/users", (req, res) => {
 
 app.get("/order/paid/:orderId", markAsPaid);
 
-http.listen(8001, () => console.log("Server running on PORT 8001"));
+http.listen(process.env.PORT || 8001, () =>
+  console.log("Server running on PORT 8001")
+);

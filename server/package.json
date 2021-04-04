@@ -1,10 +1,15 @@
 {
   "name": "server",
   "version": "1.0.0",
+  "engines": {
+    "node": "10.16.x",
+    "npm": "6.x"
+  },
   "description": "A full restaurant server replacement that allows users to quickly place complicated orders based on seat number and returns complicated bills hassle-free",
   "main": "server.js",
   "scripts": {
-    "start": "nodemon server.js"
+    "dev": "nodemon server.js",
+    "start": "node server.js"
   },
   "repository": {
     "type": "git",
