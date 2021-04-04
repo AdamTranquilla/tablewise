@@ -117,11 +117,14 @@ appIo.on("connection", function (socket) {
   });
 });
 
-mongoose.connect("mongodb://localhost:27017/development", {
-  useNewUrlParser: true,
-  useUnifiedTopology: true,
-  useCreateIndex: true,
-});
+mongoose.connect(
+  process.env.MONGODB_URI || "mongodb://localhost:27017/development",
+  {
+    useNewUrlParser: true,
+    useUnifiedTopology: true,
+    useCreateIndex: true,
+  }
+);
 
 mongoose.connection.once("open", () => {
   console.log("Connected to Mongo DB");
