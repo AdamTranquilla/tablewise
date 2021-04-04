@@ -9,11 +9,14 @@ export default function Section({ categories }: SectionType) {
       <div className="cat-container">
         {categories.map((category) => {
           return (
-            <Category
-              id={category._id}
-              name={category.name}
-              img={category.img}
-            />
+            <>
+              <Category
+                id={category._id}
+                name={category.name}
+                img={category.img}
+              />
+              {console.log("HEREEEE", category)}
+            </>
           );
         })}
       </div>

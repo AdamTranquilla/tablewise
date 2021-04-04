@@ -11,7 +11,6 @@ import SplitTable from "./SplitTable";
 import { v4 as uuid } from "uuid";
 import { ADD_TO_CART } from "../../graphql/cart";
 import { useMutation } from "@apollo/client";
-import addIcon from "../../public/seatEmpty.png";
 
 export default function Item({
   _id,
@@ -112,7 +111,7 @@ export default function Item({
       splitBy: context?.seatNo,
       tableNo: context?.tableNo,
     });
-    alert("Added to cart");
+    // alert("Added to cart");
   };
 
   const handleChange = (panel: string) => (
@@ -135,16 +134,18 @@ export default function Item({
 
       <Accordion square onChange={handleChange(`panel${_id}`)}>
         <AccordionBtn aria-controls="panel${id}-content">
-          <h3 style={{ margin: 0, marginBottom: 5 }}>{name}</h3>
-          <h3 style={{ margin: 0, marginBottom: 5 }}>${price}</h3>
-          <button className="btn" onClick={() => setShowSplit(true)}>
-            <img
-              src="./add.svg"
-              style={{ width: 40, height: 40 }}
-              className="add-to-order"
-              alt="Add"
-            />
-          </button>
+          <h3 style={{ margin: 0, marginBottom: 5 }}>{name} </h3>
+          <div className="item-price">
+            <h3 style={{ margin: 0, marginBottom: 5 }}>$ {price}</h3>
+            <button className="btn" onClick={() => setShowSplit(true)}>
+              <img
+                src="./add.svg"
+                style={{ width: 20, height: 20 }}
+                className="add-btn"
+                alt="Add"
+              />
+            </button>
+          </div>
         </AccordionBtn>
         <AccordionContent>
           <div className="option-container">

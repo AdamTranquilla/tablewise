@@ -8,6 +8,7 @@ export const GET_SECTIONS = gql`
       categories {
         _id
         name
+        img
       }
     }
   }
