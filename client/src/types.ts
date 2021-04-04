@@ -31,6 +31,7 @@ export interface OptionType {
   name: string;
   price: number;
   isSelected: boolean;
+  dontShowPrice?: boolean;
   editOption: (option: OptionOrderType) => void;
   removeOption: (optionId: string) => void;
 }

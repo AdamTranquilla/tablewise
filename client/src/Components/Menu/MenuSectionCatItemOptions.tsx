@@ -9,7 +9,7 @@ export default function Option({
   editOption,
   removeOption,
   isSelected,
-  showPrice,
+  dontShowPrice,
 }: OptionType) {
   const [selected, setSelected] = React.useState(isSelected || false);
 
@@ -29,9 +29,9 @@ export default function Option({
         }}
       />
       <h3 style={{ margin: 0, marginBottom: 0 }}>{name}</h3>
-      {showPrice ? (
+      {dontShowPrice ? null : (
         <h3 style={{ margin: 0, marginBottom: 0 }}>${price}</h3>
-      ) : null}
+      )}
     </div>
   );
 }
