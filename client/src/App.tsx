@@ -48,14 +48,18 @@ function AppWithContext() {
     getCart()
   );
   const [itemsList, _setItemsList] = React.useState<ItemType[]>([]);
-  const [tableId, setTableId] = React.useState<string>("");
+  const [tableId, setTableId] = React.useState<string>(
+    //localStorage.getItem("uniqueTableId") ||
+    ""
+  );
 
   React.useEffect(() => {
     socket.emit(
       "join",
-      { table: tableNo, seat: seatNo },
+      { table: tableNo, seat: seatNo, uniqueTableId: tableId },
       function (err: boolean, data: any) {
         setTableId(data.data.tableId);
+        //localStorage.setItem("uniqueTableId", data.data.tableId);
       }
     );
   }, []);

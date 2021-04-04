@@ -15,7 +15,6 @@ export default function Section({ categories }: SectionType) {
                 name={category.name}
                 img={category.img}
               />
-              {console.log("HEREEEE", category)}
             </>
           );
         })}
