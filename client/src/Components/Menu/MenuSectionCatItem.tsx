@@ -160,6 +160,10 @@ export default function Item({
                   price={option.price}
                   editOption={editOption}
                   removeOption={removeOption}
+                  dontShowPrice={
+                    option.price === 0 ||
+                    presetOptionId.indexOf(option._id) !== -1
+                  }
                   isSelected={
                     presetOptionId?.indexOf
                       ? presetOptionId?.indexOf(option._id) > -1
