@@ -7,6 +7,7 @@ export const GET_ITEMS = gql`
       name
       presetOptionId
       options {
+        _id
         name
         price
       }

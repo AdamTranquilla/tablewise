@@ -40,3 +40,12 @@
   background-color: transparent;
   outline: none;
 }
+
+.item-price {
+  display: flex;
+  align-items: flex-end;
+}
+
+/* .MuiAccordionSummary-root {
+  justify-content: space-between;
+} */

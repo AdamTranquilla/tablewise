@@ -3,6 +3,9 @@ import "./Menu.css";
 import Option from "./MenuSectionCatItemOptions";
 import { OptionOrderType, ItemType } from "../../types";
 import { Accordion, AccordionBtn, AccordionContent } from "./Accordions";
+import AccordionActions from "@material-ui/core/AccordionActions";
+import Divider from "@material-ui/core/Divider";
+import Button from "@material-ui/core/Button";
 import { addToCart } from "../../utils/cartStorage";
 import { OrderContext } from "../../context/Order";
 import socket from "../../utils/socket.io.js";
@@ -167,6 +170,13 @@ export default function Item({
             })}
           </div>
         </AccordionContent>
+        <Divider />
+        <AccordionActions>
+          <Button size="small">Cancel</Button>
+          <Button size="small" color="primary">
+            Add
+          </Button>
+        </AccordionActions>
       </Accordion>
     </div>
   );
