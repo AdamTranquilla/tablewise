@@ -172,7 +172,7 @@ export default function Table() {
   return (
     <div id="order-container">
       <div className="order-banner">
-        <h3>Bill: Seat #1</h3>
+        <h3>Bill: </h3>
         <button
           onClick={() => {
             // alert(orderContext?.tableId);

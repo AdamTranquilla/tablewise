@@ -1,9 +1,5 @@
 import io from "socket.io-client";
-import dotenv from "dotenv";
+import { api } from "../res/api";
 
-dotenv.config();
-
-const socket = io(
-  process.env.REACT_APP_WEBSOCKET_URI || "http://localhost:8001"
-);
+const socket = io(api);
 export default socket;
