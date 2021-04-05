@@ -23,7 +23,6 @@ exports.placeOrder = async (parent, args) => {
   let doc;
 
   await Promise.all(_items).then(async (d) => {
-    console.log(args);
     doc = {
       orderItems: d[0],
       price,

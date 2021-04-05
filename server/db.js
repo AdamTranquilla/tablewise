@@ -360,7 +360,6 @@ const fillItems = async () => {
   let options = await Options.find({});
   const _items = items.map((item) => {
     item = { ...item };
-    console.log(cats[item.categoryId - 1]);
     item.categoryId = cats[item.categoryId - 1]
       ? cats[item.categoryId - 1]._id
       : null;
@@ -384,7 +383,7 @@ const fill = async () => {
     await fillCategories();
     await fillOptions();
     await fillItems();
-    console.log("FILLED DATABASE");
+    console.log("Database Filled");
   } catch (err) {
     throw err;
   }

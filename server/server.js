@@ -80,8 +80,6 @@ appIo.on("connection", function (socket) {
   });
 
   socket.on("disconnect", function (socket) {
-    if (socket.appData)
-      console.log("SOME disconnected", socket.appData.seat + " disoconncted");
     if (socket.appData) delete users[socket.appData.table][socket.appData.seat];
   });
 
@@ -376,15 +374,17 @@ const RootQueryType = new GraphQLObjectType({
         seatNo: { type: GraphQLInt },
       },
       resolve: async (parent, args) => {
-        // find from cart where uniquetableid = .... && seatNo exist in seatIds
+        if (!args.uniqueTableId) return [];
+
         let cartItems = await Cart.find({
           uniqueTableId: args.uniqueTableId,
           "orderItems.seatId": { $in: [args.seatNo] },
         });
-        if (cartItems.length > 0)
+        if (cartItems.length > 0) {
           cartItems[0].orderItems = cartItems[0].orderItems.filter((item) => {
             return item.seatId.indexOf(args.seatNo) > -1;
           });
+        }
         return cartItems;
       },
     },
@@ -503,6 +503,4 @@ app.get("/users", (req, res) => {
 
 app.get("/order/paid/:orderId", markAsPaid);
 
-http.listen(process.env.PORT || 8001, () =>
-  console.log("Server running on PORT 8001")
-);
+http.listen(process.env.PORT || 8001, () => console.log("Server running"));
