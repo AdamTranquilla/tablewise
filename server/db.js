@@ -7,14 +7,17 @@ const Orders = require("./models/orders.mongo");
 const Cart = require("./models/cart.mongo");
 
 mongoose.connect(
-  "mongodb://localhost:27017/development",
-  //process.env.MONGODB_URI,
+  process.env.MONGODB_URI || "mongodb://localhost:27017/development",
   {
     useNewUrlParser: true,
     useUnifiedTopology: true,
     useCreateIndex: true,
   }
 );
+
+mongoose.connection.once("open", () => {
+  console.log("Connected to Mongo DB");
+});
 
 const sections = [
   { id: 1, name: "Starters" },
