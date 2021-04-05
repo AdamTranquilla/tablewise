@@ -126,7 +126,13 @@ export default function Menu(props: any) {
             aria-label="full width tabs example"
           >
             {sections.map((section: SectionType, index: number) => {
-              return <Tab label={section.name} {...a11yProps(index)} />;
+              return (
+                <Tab
+                  label={section.name}
+                  {...a11yProps(index)}
+                  style={{ minWidth: 50 }}
+                />
+              );
             })}
           </Tabs>
         </AppBar>

@@ -13,10 +13,12 @@ import { OrderItemType, ItemType } from "./types";
 import { OrderContext } from "./context/Order";
 import { getCart } from "./utils/cartStorage";
 import socket from "./utils/socket.io.js";
+import "./index.css";
 
+console.log("env", process.env.APOLLO_URI);
 const client = new ApolloClient({
   link: new HttpLink({
-    uri: "http://localhost:8001/graphql",
+    uri: process.env.APOLLO_URI || "http://localhost:8001/graphql",
   }),
   cache: new InMemoryCache(),
 });
