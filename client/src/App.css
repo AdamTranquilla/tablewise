@@ -3,9 +3,18 @@
   --light-white: rgb(255, 255, 255);
 }
 
-.App {
+#root {
+  display: block;
   text-align: center;
+}
+
+.App {
   margin: 10px;
+  width: 100%;
+  max-width: 414px;
+  max-height: 896px;
+  overflow: hidden;
+  display: inline-block;
 }
 
 .App-header {

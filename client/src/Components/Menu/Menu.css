@@ -14,6 +14,7 @@
   flex: 1;
   padding: 5px;
   height: 40vh;
+  max-height: calc(0.4 * 896px);
   overflow-y: scroll;
 }
 

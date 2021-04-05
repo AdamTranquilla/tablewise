@@ -6,6 +6,7 @@
   width: 100%;
   /* flex: 1; */
   height: 39.5vh;
+  max-height: calc(0.4 * 896px);
   background-color: rgb(255, 255, 255);
   /* border: 2px solid black; */
   box-sizing: border-box;
