@@ -4,8 +4,7 @@
   "description": "A full restaurant server replacement that allows users to quickly place complicated orders based on seat number and returns complicated bills hassle-free",
   "main": "server.js",
   "scripts": {
-    "dev": "nodemon server.js",
-    "start": "node server.js"
+    "start": "nodemon server.js"
   },
   "repository": {
     "type": "git",
