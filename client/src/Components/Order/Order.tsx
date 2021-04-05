@@ -67,7 +67,7 @@ export default function Table() {
   };
 
   React.useEffect(() => {
-    socket.removeEventListener();
+    socket.off();
     socket.on("split_bill", function (data: SplitEventResponseType) {
       data.item.presetOptionId = getPreselectFromContext(data.item.itemId);
 
