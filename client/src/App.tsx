@@ -14,6 +14,9 @@ import { OrderContext } from "./context/Order";
 import { getCart } from "./utils/cartStorage";
 import socket from "./utils/socket.io.js";
 import "./index.css";
+import dotenv from "dotenv";
+
+dotenv.config();
 
 const client = new ApolloClient({
   link: new HttpLink({
