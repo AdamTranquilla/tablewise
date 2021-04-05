@@ -5,6 +5,7 @@ import { SectionType, OrderItemType, CartItemType } from "../../types";
 import { useQuery } from "@apollo/client";
 import { GET_SECTIONS } from "../../graphql/section";
 
+// @ts-ignore
 import SwipeableViews from "react-swipeable-views";
 import { makeStyles, Theme, useTheme } from "@material-ui/core/styles";
 import AppBar from "@material-ui/core/AppBar";

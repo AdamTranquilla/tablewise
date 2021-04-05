@@ -9,7 +9,9 @@ import Button from "@material-ui/core/Button";
 import { addToCart } from "../../utils/cartStorage";
 import { OrderContext } from "../../context/Order";
 import socket from "../../utils/socket.io.js";
+// @ts-ignore
 import Modal from "react-modal";
+// @ts-ignore
 import SplitTable from "./SplitTable";
 import { v4 as uuid } from "uuid";
 import { ADD_TO_CART } from "../../graphql/cart";
