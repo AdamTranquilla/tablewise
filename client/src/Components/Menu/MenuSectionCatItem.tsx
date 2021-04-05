@@ -12,6 +12,7 @@ import socket from "../../utils/socket.io.js";
 // @ts-ignore
 import Modal from "react-modal";
 import SplitTable from "./SplitTable";
+// @ts-ignore
 import { v4 as uuid } from "uuid";
 import { ADD_TO_CART } from "../../graphql/cart";
 import { useMutation } from "@apollo/client";
