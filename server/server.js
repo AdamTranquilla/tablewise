@@ -51,7 +51,6 @@ appIo.on("connection", function (socket) {
     let seats = Object.keys(users[data.table] || {});
     if (seats.length == 0) {
       socket.tableId = uuid.v4();
-      console.log(socket.tableId);
     } else {
       socket.tableId = users[data.table][seats[0]].tableId;
     }
@@ -81,8 +80,6 @@ appIo.on("connection", function (socket) {
   });
 
   socket.on("disconnect", function (socket) {
-    if (socket.appData)
-      console.log("SOME disconnected", socket.appData.seat + " disoconncted");
     if (socket.appData) delete users[socket.appData.table][socket.appData.seat];
   });
 
@@ -117,17 +114,18 @@ appIo.on("connection", function (socket) {
   });
 });
 
-mongoose.connect("mongodb://localhost:27017/development", {
-  useNewUrlParser: true,
-  useUnifiedTopology: true,
-  useCreateIndex: true,
-});
+mongoose.connect(
+  process.env.MONGODB_URI || "mongodb://localhost:27017/development",
+  {
+    useNewUrlParser: true,
+    useUnifiedTopology: true,
+    useCreateIndex: true,
+  }
+);
 
 mongoose.connection.once("open", () => {
   console.log("Connected to Mongo DB");
 });
-
-const { items, categories, options, orders } = require("./db");
 
 const itemType = new GraphQLObjectType({
   name: "Item",
@@ -136,7 +134,7 @@ const itemType = new GraphQLObjectType({
     _id: { type: GraphQLNonNull(GraphQLString) },
     name: { type: GraphQLNonNull(GraphQLString) },
     categoryId: { type: GraphQLNonNull(GraphQLString) },
-    price: { type: GraphQLInt },
+    price: { type: GraphQLFloat },
     category: {
       type: categoryType,
       resolve: async (item) => {
@@ -175,7 +173,7 @@ const optionType = new GraphQLObjectType({
   fields: () => ({
     _id: { type: GraphQLNonNull(GraphQLString) },
     name: { type: GraphQLNonNull(GraphQLString) },
-    price: { type: GraphQLNonNull(GraphQLInt) },
+    price: { type: GraphQLNonNull(GraphQLFloat) },
   }),
 });
 
@@ -228,7 +226,7 @@ const orderType = new GraphQLObjectType({
       type: new GraphQLList(GraphQLInt),
     },
     stripeSessionId: { type: GraphQLString },
-    price: { type: GraphQLNonNull(GraphQLInt) },
+    price: { type: GraphQLNonNull(GraphQLFloat) },
     orderItems: {
       type: new GraphQLList(orderItemType),
     },
@@ -376,12 +374,17 @@ const RootQueryType = new GraphQLObjectType({
         seatNo: { type: GraphQLInt },
       },
       resolve: async (parent, args) => {
-        // find from cart where uniquetableid = .... && seatNo exist in seatIds
+        if (!args.uniqueTableId) return [];
+
         let cartItems = await Cart.find({
           uniqueTableId: args.uniqueTableId,
           "orderItems.seatId": { $in: [args.seatNo] },
         });
-        //console.log(args.uniqueTableId, cartItems[0].orderItems.length);
+        if (cartItems.length > 0) {
+          cartItems[0].orderItems = cartItems[0].orderItems.filter((item) => {
+            return item.seatId.indexOf(args.seatNo) > -1;
+          });
+        }
         return cartItems;
       },
     },
@@ -500,6 +503,4 @@ app.get("/users", (req, res) => {
 
 app.get("/order/paid/:orderId", markAsPaid);
 
-http.listen(process.env.PORT || 8001, () =>
-  console.log("Server running on PORT 8001")
-);
+http.listen(process.env.PORT || 8001, () => console.log("Server running"));

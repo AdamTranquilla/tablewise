@@ -25,10 +25,6 @@
   flex: 1;
 }
 
-/* .option-container {
-  flex: 1;
-} */
-
 .option {
   display: flex;
   flex-direction: row;
@@ -45,7 +41,3 @@
   display: flex;
   align-items: flex-end;
 }
-
-/* .MuiAccordionSummary-root {
-  justify-content: space-between;
-} */

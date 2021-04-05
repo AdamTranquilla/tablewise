@@ -14,7 +14,9 @@ interface CategoryProps {
 
 export default function Category({ name, id, img }: CategoryProps) {
   const [expanded, setExpanded] = React.useState<string | false>(`panel${id}`);
-  const { loading, data } = useQuery(GET_CATEGORY, { variables: { id, img } });
+  const { loading, data, error } = useQuery(GET_CATEGORY, {
+    variables: { id, img },
+  });
   const [items, setItems] = React.useState([]);
 
   const handleChange = (panel: string) => (
@@ -30,6 +32,10 @@ export default function Category({ name, id, img }: CategoryProps) {
     }
   }, [loading]);
 
+  if (error) {
+    return <p>Some problem happened</p>;
+  }
+
   if (loading || !items) {
     return (
       <div
@@ -43,7 +49,7 @@ export default function Category({ name, id, img }: CategoryProps) {
       </div>
     );
   }
-  console.log("cat", img);
+
   return (
     <Accordion square onChange={handleChange("id")}>
       <AccordionBtn aria-controls="panel${id}-content" id={id}>

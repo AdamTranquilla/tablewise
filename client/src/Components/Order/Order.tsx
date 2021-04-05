@@ -60,7 +60,6 @@ export default function Table() {
   );
 
   const payStripe = (sessionId: String) => {
-    console.log("sessionId", sessionId);
     stripe.redirectToCheckout({
       sessionId,
     });
@@ -77,7 +76,6 @@ export default function Table() {
     socket.on("item_removed", function (data: RemoveEventResponseType) {
       let index: number = -1;
       let length = orderContext?.items?.length || 0;
-      console.log("REM", data);
       for (let i = 0; i < length; i++) {
         if (
           orderContext?.items &&
@@ -107,7 +105,6 @@ export default function Table() {
     if (!loading && data) {
       emptyCart();
       orderContext?.setItems("EMPTY");
-      // alert(orderContext?.items?.length);
       payStripe(data.placeOrder.stripeSessionId);
     }
   }, [loading, error, data]);
@@ -130,7 +127,7 @@ export default function Table() {
 
   const removeItem = (index: number) => {
     let item = orderContext?.items ? orderContext?.items[index] : null;
-    if (item && item?.seatId?.length > 1) {
+    if (item && item?.seatId?.length > 0) {
       socket.emit("item_removed", {
         itemUUID: item?.cartItemId,
         seatIds: item?.seatId,
@@ -172,7 +169,7 @@ export default function Table() {
   return (
     <div id="order-container">
       <div className="order-banner">
-        <h3>Bill: Seat #1</h3>
+        <h3>Bill: </h3>
         <button
           onClick={() => {
             // alert(orderContext?.tableId);
@@ -215,9 +212,14 @@ export default function Table() {
                   </td>
                   <td>
                     $
-                    {Number(
-                      calculatePrice(item, getPreselectFromContext(item.itemId))
-                    ) / item.seatId.length}
+                    {(
+                      Number(
+                        calculatePrice(
+                          item,
+                          getPreselectFromContext(item.itemId)
+                        )
+                      ) / item.seatId.length
+                    ).toFixed(2)}
                   </td>
                   <td>
                     <button className="btn" onClick={() => removeItem(index)}>

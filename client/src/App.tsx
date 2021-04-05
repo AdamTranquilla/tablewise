@@ -13,10 +13,12 @@ import { OrderItemType, ItemType } from "./types";
 import { OrderContext } from "./context/Order";
 import { getCart } from "./utils/cartStorage";
 import socket from "./utils/socket.io.js";
+import "./index.css";
+import { graphqlLink } from "./res/api";
 
 const client = new ApolloClient({
   link: new HttpLink({
-    uri: "http://localhost:8001/graphql",
+    uri: graphqlLink,
   }),
   cache: new InMemoryCache(),
 });
@@ -48,10 +50,7 @@ function AppWithContext() {
     getCart()
   );
   const [itemsList, _setItemsList] = React.useState<ItemType[]>([]);
-  const [tableId, setTableId] = React.useState<string>(
-    //localStorage.getItem("uniqueTableId") ||
-    ""
-  );
+  const [tableId, setTableId] = React.useState<string>("");
 
   React.useEffect(() => {
     socket.emit(
@@ -59,7 +58,6 @@ function AppWithContext() {
       { table: tableNo, seat: seatNo, uniqueTableId: tableId },
       function (err: boolean, data: any) {
         setTableId(data.data.tableId);
-        //localStorage.setItem("uniqueTableId", data.data.tableId);
       }
     );
   }, []);

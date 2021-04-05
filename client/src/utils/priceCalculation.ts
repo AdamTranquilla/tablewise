@@ -16,7 +16,6 @@ const calculatePrice = (
       if (presetOptionId && presetOptionId.indexOf(option.optionId) === -1)
         price = Number(option.price) + Number(price);
     });
-  console.log("PRICE", presetOptionId);
   return price;
 };
 
