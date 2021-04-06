@@ -114,7 +114,6 @@ export default function Table() {
     cart.forEach((item: OrderItemType) => {
       delete item.name;
       delete item.price;
-      // we need it later
       delete item.cartItemId;
       delete item.presetOptionId;
       item.options?.forEach((option) => {
@@ -166,13 +165,21 @@ export default function Table() {
     return total.toFixed(2);
   };
 
+  const splitIndicator = (seats: number) => {
+    if (seats > 1)
+      return (
+        <>
+          <sup> 1</sup>/<sub>{seats}</sub>
+        </>
+      );
+  };
+
   return (
     <div id="order-container">
       <div className="order-banner">
         <h3>Bill: </h3>
         <button
           onClick={() => {
-            // alert(orderContext?.tableId);
             placeOrderHandler({
               variables: {
                 tableId: 1,
@@ -189,28 +196,21 @@ export default function Table() {
         <table>
           <tr className="order-header">
             <td className="order-items">
-              <h4>Item</h4>
+              <h4>Items:</h4>
             </td>
-            <td className="order-split">
-              <h4>Share</h4>
-            </td>
-            <td className="order-rate">
+            <td className="order-prices">
               <h4>Sub-Total</h4>
-            </td>
-            <td className="order-remove">
-              <h4>Edit</h4>
             </td>
           </tr>
           {orderContext?.items?.map((item: OrderItemType, index: number) => {
             return (
               <>
                 <tr className="order-row">
-                  <td>{item.name}</td>
                   <td>
-                    <sup>1</sup>&frasl;
-                    <sub>{item.seatId.length}</sub>
+                    {item.name}
+                    {splitIndicator(item.seatId.length)}
                   </td>
-                  <td>
+                  <td className="order-price">
                     $
                     {(
                       Number(
@@ -220,8 +220,6 @@ export default function Table() {
                         )
                       ) / item.seatId.length
                     ).toFixed(2)}
-                  </td>
-                  <td>
                     <button className="btn" onClick={() => removeItem(index)}>
                       <img
                         src="./remove.svg"
@@ -233,7 +231,7 @@ export default function Table() {
                   </td>
                 </tr>
                 <tr className="order-details">
-                  <td colSpan={2}>
+                  <td className="details">
                     {item.options?.map((option) => {
                       return option.name;
                     })}
@@ -243,10 +241,12 @@ export default function Table() {
             );
           })}
           <tr className="order-footer">
-            <td>Total</td>
-            <td></td>
-            <td>$ {getTotalPrice()}</td>
-            <td></td>
+            <td>
+              <h4>Total</h4>
+            </td>
+            <td>
+              <h4>${getTotalPrice()}</h4>
+            </td>
           </tr>
         </table>
       </div>

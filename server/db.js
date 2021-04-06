@@ -77,7 +77,7 @@ const items = [
   {
     id: 5,
     name: "Sweat Potato Fries",
-    price: 5.5,
+    price: 7.5,
     presetOptionId: [19],
     validOptionId: [11, 19],
     categoryId: 2,
@@ -85,7 +85,7 @@ const items = [
   {
     id: 6,
     name: "Calamari",
-    price: 5.5,
+    price: 10.5,
     presetOptionId: [19],
     validOptionId: [11, 19],
     categoryId: 2,

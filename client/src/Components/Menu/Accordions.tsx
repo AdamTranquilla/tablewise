@@ -24,6 +24,7 @@ export const AccordionBtn = withStyles({
   root: {
     backgroundColor: "rgba(0, 0, 0, .07)",
     border: "1px solid rgba(0, 0, 0, .125)",
+    paddingRight: 0,
     minHeight: 46,
     "&$expanded": {
       minHeight: 12,
