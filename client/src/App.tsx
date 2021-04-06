@@ -11,7 +11,6 @@ import {
 } from "@apollo/client";
 import { OrderItemType, ItemType } from "./types";
 import { OrderContext } from "./context/Order";
-import { getCart } from "./utils/cartStorage";
 import socket from "./utils/socket.io.js";
 import "./App.css";
 import "./index.css";
@@ -26,7 +25,7 @@ const client = new ApolloClient({
 
 let seatNo = Number(
   window.location.hash.substr(1, window.location.hash.length)
-); //Math.ceil(Math.random() * 6);
+);
 let tableNo = 1;
 
 function App() {
@@ -47,9 +46,7 @@ function App() {
 }
 
 function AppWithContext() {
-  const [items, _setItems] = React.useState<OrderItemType[] | undefined>(
-    getCart()
-  );
+  const [items, _setItems] = React.useState<OrderItemType[] | undefined>();
   const [itemsList, _setItemsList] = React.useState<ItemType[]>([]);
   const [tableId, setTableId] = React.useState<string>("");
 
