@@ -3,9 +3,6 @@ import "./Menu.css";
 import Option from "./MenuSectionCatItemOptions";
 import { OptionOrderType, ItemType } from "../../types";
 import { Accordion, AccordionBtn, AccordionContent } from "./Accordions";
-import AccordionActions from "@material-ui/core/AccordionActions";
-import Divider from "@material-ui/core/Divider";
-import Button from "@material-ui/core/Button";
 import { addToCart } from "../../utils/cartStorage";
 import { OrderContext } from "../../context/Order";
 import socket from "../../utils/socket.io.js";
@@ -139,17 +136,21 @@ export default function Item({
 
       <Accordion square onChange={handleChange(`panel${_id}`)}>
         <AccordionBtn aria-controls="panel${id}-content">
-          <h3 style={{ margin: 0, marginBottom: 5 }}>{name} </h3>
-          <div className="item-price">
-            <h3 style={{ margin: 0, marginBottom: 5 }}>$ {price}</h3>
-            <button className="btn" onClick={() => setShowSplit(true)}>
-              <img
-                src="./add.svg"
-                style={{ width: 20, height: 20 }}
-                className="add-btn"
-                alt="Add"
-              />
-            </button>
+          <div className="item-head">
+            <h3 style={{ margin: 0, marginBottom: 5 }}>{name} </h3>
+            <div className="item-price">
+              <h3 style={{ margin: 0, marginBottom: 5 }}>
+                ${price.toFixed(2)}
+              </h3>
+              <button className="btn" onClick={() => setShowSplit(true)}>
+                <img
+                  src="./add.svg"
+                  style={{ width: 20, height: 20 }}
+                  className="add-btn"
+                  alt="Add"
+                />
+              </button>
+            </div>
           </div>
         </AccordionBtn>
         <AccordionContent>
@@ -176,13 +177,6 @@ export default function Item({
             })}
           </div>
         </AccordionContent>
-        <Divider />
-        <AccordionActions>
-          <Button size="small">Cancel</Button>
-          <Button size="small" color="primary">
-            Add
-          </Button>
-        </AccordionActions>
       </Accordion>
     </div>
   );

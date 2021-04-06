@@ -13,6 +13,7 @@ import { OrderItemType, ItemType } from "./types";
 import { OrderContext } from "./context/Order";
 import { getCart } from "./utils/cartStorage";
 import socket from "./utils/socket.io.js";
+import "./App.css";
 import "./index.css";
 import { graphqlLink } from "./res/api";
 

@@ -1,11 +1,20 @@
 :root {
   --dark-grey: rgb(216, 216, 216);
-  --light-white: rgb(255, 255, 255);
+  --light-white: rgb(0, 0, 0);
+}
+
+#root {
+  display: block;
+  text-align: center;
 }
 
 .App {
-  text-align: center;
   margin: 10px;
+  width: 100%;
+  max-width: 414px;
+  max-height: 896px;
+  overflow: hidden;
+  display: inline-block;
 }
 
 .App-header {
