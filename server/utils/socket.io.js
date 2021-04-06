@@ -3,7 +3,7 @@ let io;
 exports.init = function (server) {
   io = require("socket.io")(server, {
     cors: {
-      origin: "*", //wildcard origins are kind of dangerous
+      origin: "*",
     },
   });
 };

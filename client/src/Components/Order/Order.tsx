@@ -3,9 +3,7 @@ import { OptionOrderType } from "../../types";
 import "./Order.css";
 import { useMutation } from "@apollo/client";
 import { PLACE_ORDER } from "../../graphql/order";
-import { emptyCart } from "../../utils/cartStorage";
 import { OrderContext } from "../../context/Order";
-import { addToCart, removeFromCart, updateCart } from "../../utils/cartStorage";
 import socket from "../../utils/socket.io";
 import calculatePrice from "../../utils/priceCalculation";
 
@@ -71,7 +69,6 @@ export default function Table() {
       data.item.presetOptionId = getPreselectFromContext(data.item.itemId);
 
       orderContext?.setItems("ADD_ITEM", data.item);
-      addToCart(data.item);
     });
     socket.on("item_removed", function (data: RemoveEventResponseType) {
       let index: number = -1;
@@ -96,14 +93,12 @@ export default function Table() {
         updatedItem?.seatId?.splice(seatIndex || -1, 1);
 
         updatedItem !== null && orderContext?.updateItem(index, updatedItem);
-        updatedItem !== null && updateCart(index, updatedItem);
       }
     });
   }, [orderContext?.items]);
 
   React.useEffect(() => {
     if (!loading && data) {
-      emptyCart();
       orderContext?.setItems("EMPTY");
       payStripe(data.placeOrder.stripeSessionId);
     }
@@ -134,8 +129,6 @@ export default function Table() {
         seatNo: orderContext?.seatNo,
       });
     }
-
-    removeFromCart(index);
     orderContext?.removeItem(index);
   };
 

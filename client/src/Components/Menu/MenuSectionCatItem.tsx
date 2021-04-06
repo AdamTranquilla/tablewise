@@ -3,7 +3,6 @@ import "./Menu.css";
 import Option from "./MenuSectionCatItemOptions";
 import { OptionOrderType, ItemType } from "../../types";
 import { Accordion, AccordionBtn, AccordionContent } from "./Accordions";
-import { addToCart } from "../../utils/cartStorage";
 import { OrderContext } from "../../context/Order";
 import socket from "../../utils/socket.io.js";
 // @ts-ignore
@@ -99,8 +98,6 @@ export default function Item({
     });
 
     if (seatIds.indexOf(context?.seatNo || -1) > -1) {
-      addToCart(orderItem);
-
       cartItem.options.forEach((option: OptionOrderType) => {
         delete option.price;
         delete option.name;
