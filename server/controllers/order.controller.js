@@ -3,6 +3,7 @@ const Order = require("../models/orders.mongo");
 const Option = require("../models/options.mongo");
 const { getById, get, create } = require("../transactions");
 const { getSession } = require("../utils/stripe");
+const { getMaxListeners } = require("../models/orders.mongo");
 
 exports.placeOrder = async (parent, args) => {
   let price = 0;
@@ -22,17 +23,39 @@ exports.placeOrder = async (parent, args) => {
 
   let doc;
 
+  let totalSplitBill = 0;
   await Promise.all(_items).then(async (d) => {
+    d.forEach((item) => {
+      console.log(item);
+      totalSplitBill += item.splitBill;
+    });
+
     doc = {
       orderItems: d[0],
       price,
       tableId: args.tableId,
       uniqueTableId: args.uniqueTableId,
     };
-    doc = await create(Order, doc);
+
+    let count = await Order.count({ uniqueTableId: args.uniqueTableId });
+    if (count === 0) {
+      doc = await create(Order, doc);
+    } else {
+      await Order.updateOne(
+        {
+          uniqueTableId: args.uniqueTableId,
+        },
+        {
+          $push: { orderItems: doc.orderItems },
+          $inc: { price: doc.price },
+        }
+      );
+      doc = await Order.find({ uniqueTableId: args.uniqueTableId });
+      doc = doc[0];
+    }
   });
 
-  let session = await getSession(10, "Test", doc._id);
+  let session = await getSession(totalSplitBill || 10, "Test", doc._id);
   doc.stripeSessionId = session.id;
 
   return doc;

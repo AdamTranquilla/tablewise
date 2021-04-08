@@ -7,19 +7,25 @@ exports.getSession = function (amount, name = "-", orderId, seat, table) {
     if (!amount || !orderId) {
       throw "Order Id and Amount is required";
     }
+    console.log(seat);
+    const billNum = seat ? seat : 1;
 
     stripe.checkout.sessions.create(
       {
-        success_url: "http://localhost:8001/order/paid/" + orderId,
-        cancel_url: `http://localhost:3000/${seat}/${table}`,
+        success_url:
+          (process.env.REACT_APP_WEBSOCKET_URI || "http://localhost:8001/") +
+          "order/paid/" +
+          orderId,
+        cancel_url:
+          (process.env.FRONTEND || "http://localhost:3000") + `/#${billNum}`,
         payment_method_types: ["card"],
         line_items: [
           {
             name,
             description:
-              "Buy Online and pay using Stripe in just one easy step",
-            amount: amount * 100,
-            currency: "usd",
+              "Use card number 4242 4242 4242 4242 with a future exp. date and any CVC",
+            amount: Math.round(amount * 100),
+            currency: "CAD",
             quantity: 1,
           },
         ],
