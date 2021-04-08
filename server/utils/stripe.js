@@ -7,6 +7,8 @@ exports.getSession = function (amount, name = "-", orderId, seat, table) {
     if (!amount || !orderId) {
       throw "Order Id and Amount is required";
     }
+    console.log(seat);
+    const billNum = seat ? seat : 1;
 
     stripe.checkout.sessions.create(
       {
@@ -15,7 +17,7 @@ exports.getSession = function (amount, name = "-", orderId, seat, table) {
           "order/paid/" +
           orderId,
         cancel_url:
-          (process.env.FRONTEND || "http://localhost:3000") + `/#${seat}`,
+          (process.env.FRONTEND || "http://localhost:3000") + `/#${billNum}`,
         payment_method_types: ["card"],
         line_items: [
           {

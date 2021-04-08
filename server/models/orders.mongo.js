@@ -26,7 +26,6 @@ const orderSchema = new Schema(
         },
         uniqueItemId: {
           type: String,
-          required: [true, "uniqueItemId is required"],
         },
         paid: {
           type: Boolean,

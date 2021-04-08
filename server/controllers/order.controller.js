@@ -3,6 +3,7 @@ const Order = require("../models/orders.mongo");
 const Option = require("../models/options.mongo");
 const { getById, get, create } = require("../transactions");
 const { getSession } = require("../utils/stripe");
+const { getMaxListeners } = require("../models/orders.mongo");
 
 exports.placeOrder = async (parent, args) => {
   let price = 0;
