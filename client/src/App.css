@@ -10,7 +10,7 @@
 
 .App {
   margin: 10px;
-  width: 100%;
+  width: calc(100% - 20px);
   max-width: 414px;
   max-height: 896px;
   overflow: hidden;
