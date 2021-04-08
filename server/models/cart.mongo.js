@@ -20,6 +20,10 @@ const cartSchema = new Schema(
         uniqueItemId: {
           type: String,
         },
+        paid: {
+          type: Boolean,
+          default: false,
+        },
         seatId: [
           {
             type: Number,
