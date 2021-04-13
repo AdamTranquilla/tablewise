@@ -25,5 +25,5 @@ The front-end of this web app was built in React with TypeScript and utilizes Ma
 
 ## Wireframe 
 
-!["balsamic"](https://github.com/AdamTranquilla/adamtranquilla.github.io/blob/main/public/tablewise.gif?raw=true)
+!["tablewise gif"](https://imgur.com/a/0Whv2aw)
 
