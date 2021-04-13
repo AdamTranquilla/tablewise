@@ -1,19 +1,21 @@
 # Tablewise
 
-A mobile restaurant menu that allows users to place and split orders based on their seat numbers. Orders can be fully customized, and menus can be filtered based on dietary restrictions.
+Tablewise is a customer-facing restaurant POS that allows users to place and split complicated orders hassle-free. This app was designed to allow users to use via mobile browser. Scan a QR code with your phone to start (recommended) or click one of the links below to view on your current device. Try splitting orders between two seats!
+
+The front-end of this web app was built in React with TypeScript and utilizes Material-UI AppBar, SwipeableView and Accordion. Apollo Client communicates with the exposed GraphQL API back-end hosted on MongoDB Atlas.
+
 ## Stack
 
 ### Frontend:
-- React Native
+- React 
 - TypeScript
-- HTML5
-- Sass
+- HTML5/CSS3
+- Apollo Client
 
 ### Backend:
 - GraphQL
-- Node
-- Express 
-- MongoDB
+- Node Express 
+- MongoDB Atlas
 - Socket.io
 
 ## Testing:
@@ -23,5 +25,5 @@ A mobile restaurant menu that allows users to place and split orders based on th
 
 ## Wireframe 
 
-!["balsamic"](https://i.imgur.com/XytIyy0.png)
+!["balsamic"](https://github.com/AdamTranquilla/adamtranquilla.github.io/blob/main/public/tablewise.gif?raw=true)
 
