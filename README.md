@@ -11,6 +11,7 @@ The front-end of this web app was built in React with TypeScript and utilizes Ma
 - React
 - TypeScript
 - HTML5/CSS3
+- Stripe
 - Apollo Client
 
 ### Backend:
@@ -19,13 +20,5 @@ The front-end of this web app was built in React with TypeScript and utilizes Ma
 - Node Express
 - MongoDB Atlas
 - Socket.io
-
-## Testing:
-
-- Jest
-- Cypress
-- Storybook
-
-## Wireframe
 
 !["tablewise"](https://github.com/AdamTranquilla/tablewise/blob/main/client/public/tablewise.gif?raw=true)
