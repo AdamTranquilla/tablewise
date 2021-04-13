@@ -28,4 +28,4 @@ The front-end of this web app was built in React with TypeScript and utilizes Ma
 
 ## Wireframe
 
-!["tablewise"](https://github.com/AdamTranquilla/tablewise/blob/master/client/public/tablewise.gif?raw=true)
+!["tablewise"](https://github.com/AdamTranquilla/tablewise/blob/main/client/public/tablewise.gif?raw=true)
