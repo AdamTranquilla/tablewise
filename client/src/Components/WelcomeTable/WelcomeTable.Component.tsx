@@ -12,8 +12,16 @@ export default function WelcomeTable({
 }: WelcomeTableProps): JSX.Element {
   return (
     <div id="welcometable-container">
-      <p id="table-title">Welcome to Table # {tableNo}</p>
-      <p id="table-title-small">Seat # {seatNo}</p>
+      <img
+        src="./plate.png"
+        style={{ width: 50, height: 50 }}
+        className="logo"
+        alt="TableWise"
+      />
+      <div className="welcome-text">
+        <p id="table-title">Welcome to Table # {tableNo}</p>
+        <p id="table-title-small">Seat # {seatNo}</p>
+      </div>
     </div>
   );
 }

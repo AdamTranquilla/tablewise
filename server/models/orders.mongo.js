@@ -24,6 +24,13 @@ const orderSchema = new Schema(
           type: Schema.ObjectId,
           required: [true, "Item Id is required"],
         },
+        uniqueItemId: {
+          type: String,
+        },
+        paid: {
+          type: Boolean,
+          default: false,
+        },
         seatId: [
           {
             type: Number,

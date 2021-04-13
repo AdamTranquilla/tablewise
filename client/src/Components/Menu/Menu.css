@@ -13,32 +13,19 @@
 .section-container {
   flex: 1;
   padding: 5px;
-  height: 40vh;
+  height: calc(40vh - 10px);
+  max-height: calc(0.4 * 896px);
   overflow-y: scroll;
-}
-
-.cat-container {
-  flex: 1;
 }
 
 .item-container {
   flex: 1;
 }
 
-/* .option-container {
+.item-head {
   flex: 1;
-} */
-
-.option {
   display: flex;
-  flex-direction: row;
-  text-align: center;
-}
-
-.btn {
-  border:0;
-  background-color: transparent;
-  outline: none;
+  justify-content: space-between;
 }
 
 .item-price {
@@ -46,6 +33,27 @@
   align-items: flex-end;
 }
 
-/* .MuiAccordionSummary-root {
+.option-container {
+  flex: 1;
+}
+
+.option {
+  display: flex;
   justify-content: space-between;
-} */
+}
+
+.option-select {
+  display: flex;
+}
+
+.option-price {
+  margin-right: 20px;
+}
+
+.btn {
+  border:0;
+  background-color: transparent;
+  padding: 0px 3px 3px 1px;
+  outline: none;
+}
+

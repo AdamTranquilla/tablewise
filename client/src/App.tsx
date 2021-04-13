@@ -11,19 +11,21 @@ import {
 } from "@apollo/client";
 import { OrderItemType, ItemType } from "./types";
 import { OrderContext } from "./context/Order";
-import { getCart } from "./utils/cartStorage";
 import socket from "./utils/socket.io.js";
+import "./App.css";
+import "./index.css";
+import { graphqlLink } from "./res/api";
 
 const client = new ApolloClient({
   link: new HttpLink({
-    uri: "http://localhost:8001/graphql",
+    uri: graphqlLink,
   }),
   cache: new InMemoryCache(),
 });
 
 let seatNo = Number(
   window.location.hash.substr(1, window.location.hash.length)
-); //Math.ceil(Math.random() * 6);
+);
 let tableNo = 1;
 
 function App() {
@@ -44,14 +46,9 @@ function App() {
 }
 
 function AppWithContext() {
-  const [items, _setItems] = React.useState<OrderItemType[] | undefined>(
-    getCart()
-  );
+  const [items, _setItems] = React.useState<OrderItemType[] | undefined>();
   const [itemsList, _setItemsList] = React.useState<ItemType[]>([]);
-  const [tableId, setTableId] = React.useState<string>(
-    //localStorage.getItem("uniqueTableId") ||
-    ""
-  );
+  const [tableId, setTableId] = React.useState<string>("");
 
   React.useEffect(() => {
     socket.emit(
@@ -59,7 +56,6 @@ function AppWithContext() {
       { table: tableNo, seat: seatNo, uniqueTableId: tableId },
       function (err: boolean, data: any) {
         setTableId(data.data.tableId);
-        //localStorage.setItem("uniqueTableId", data.data.tableId);
       }
     );
   }, []);

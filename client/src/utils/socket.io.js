@@ -1,3 +1,5 @@
 import io from "socket.io-client";
-const socket = io("http://localhost:8001");
+import { api } from "../res/api";
+
+const socket = io(api);
 export default socket;

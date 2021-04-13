@@ -3,9 +3,7 @@ import { OptionOrderType } from "../../types";
 import "./Order.css";
 import { useMutation } from "@apollo/client";
 import { PLACE_ORDER } from "../../graphql/order";
-import { emptyCart } from "../../utils/cartStorage";
 import { OrderContext } from "../../context/Order";
-import { addToCart, removeFromCart, updateCart } from "../../utils/cartStorage";
 import socket from "../../utils/socket.io";
 import calculatePrice from "../../utils/priceCalculation";
 
@@ -60,7 +58,6 @@ export default function Table() {
   );
 
   const payStripe = (sessionId: String) => {
-    console.log("sessionId", sessionId);
     stripe.redirectToCheckout({
       sessionId,
     });
@@ -72,12 +69,10 @@ export default function Table() {
       data.item.presetOptionId = getPreselectFromContext(data.item.itemId);
 
       orderContext?.setItems("ADD_ITEM", data.item);
-      addToCart(data.item);
     });
     socket.on("item_removed", function (data: RemoveEventResponseType) {
       let index: number = -1;
       let length = orderContext?.items?.length || 0;
-      console.log("REM", data);
       for (let i = 0; i < length; i++) {
         if (
           orderContext?.items &&
@@ -98,16 +93,13 @@ export default function Table() {
         updatedItem?.seatId?.splice(seatIndex || -1, 1);
 
         updatedItem !== null && orderContext?.updateItem(index, updatedItem);
-        updatedItem !== null && updateCart(index, updatedItem);
       }
     });
   }, [orderContext?.items]);
 
   React.useEffect(() => {
     if (!loading && data) {
-      emptyCart();
       orderContext?.setItems("EMPTY");
-      // alert(orderContext?.items?.length);
       payStripe(data.placeOrder.stripeSessionId);
     }
   }, [loading, error, data]);
@@ -117,7 +109,6 @@ export default function Table() {
     cart.forEach((item: OrderItemType) => {
       delete item.name;
       delete item.price;
-      // we need it later
       delete item.cartItemId;
       delete item.presetOptionId;
       item.options?.forEach((option) => {
@@ -130,7 +121,7 @@ export default function Table() {
 
   const removeItem = (index: number) => {
     let item = orderContext?.items ? orderContext?.items[index] : null;
-    if (item && item?.seatId?.length > 1) {
+    if (item && item?.seatId?.length > 0) {
       socket.emit("item_removed", {
         itemUUID: item?.cartItemId,
         seatIds: item?.seatId,
@@ -138,8 +129,6 @@ export default function Table() {
         seatNo: orderContext?.seatNo,
       });
     }
-
-    removeFromCart(index);
     orderContext?.removeItem(index);
   };
 
@@ -169,13 +158,21 @@ export default function Table() {
     return total.toFixed(2);
   };
 
+  const splitIndicator = (seats: number) => {
+    if (seats > 1)
+      return (
+        <>
+          <sup> 1</sup>/<sub>{seats}</sub>
+        </>
+      );
+  };
+
   return (
     <div id="order-container">
       <div className="order-banner">
-        <h3>Bill: Seat #1</h3>
+        <h3>Bill: </h3>
         <button
           onClick={() => {
-            // alert(orderContext?.tableId);
             placeOrderHandler({
               variables: {
                 tableId: 1,
@@ -192,34 +189,30 @@ export default function Table() {
         <table>
           <tr className="order-header">
             <td className="order-items">
-              <h4>Item</h4>
+              <h4>Items:</h4>
             </td>
-            <td className="order-split">
-              <h4>Share</h4>
-            </td>
-            <td className="order-rate">
+            <td className="order-prices">
               <h4>Sub-Total</h4>
-            </td>
-            <td className="order-remove">
-              <h4>Edit</h4>
             </td>
           </tr>
           {orderContext?.items?.map((item: OrderItemType, index: number) => {
             return (
               <>
                 <tr className="order-row">
-                  <td>{item.name}</td>
                   <td>
-                    <sup>1</sup>&frasl;
-                    <sub>{item.seatId.length}</sub>
+                    {item.name}
+                    {splitIndicator(item.seatId.length)}
                   </td>
-                  <td>
+                  <td className="order-price">
                     $
-                    {Number(
-                      calculatePrice(item, getPreselectFromContext(item.itemId))
-                    ) / item.seatId.length}
-                  </td>
-                  <td>
+                    {(
+                      Number(
+                        calculatePrice(
+                          item,
+                          getPreselectFromContext(item.itemId)
+                        )
+                      ) / item.seatId.length
+                    ).toFixed(2)}
                     <button className="btn" onClick={() => removeItem(index)}>
                       <img
                         src="./remove.svg"
@@ -231,7 +224,7 @@ export default function Table() {
                   </td>
                 </tr>
                 <tr className="order-details">
-                  <td colSpan={2}>
+                  <td className="details">
                     {item.options?.map((option) => {
                       return option.name;
                     })}
@@ -241,10 +234,12 @@ export default function Table() {
             );
           })}
           <tr className="order-footer">
-            <td>Total</td>
-            <td></td>
-            <td>$ {getTotalPrice()}</td>
-            <td></td>
+            <td>
+              <h4>Total</h4>
+            </td>
+            <td>
+              <h4>${getTotalPrice()}</h4>
+            </td>
           </tr>
         </table>
       </div>

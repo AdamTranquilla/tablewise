@@ -5,6 +5,7 @@ import { SectionType, OrderItemType, CartItemType } from "../../types";
 import { useQuery } from "@apollo/client";
 import { GET_SECTIONS } from "../../graphql/section";
 
+// @ts-ignore
 import SwipeableViews from "react-swipeable-views";
 import { makeStyles, Theme, useTheme } from "@material-ui/core/styles";
 import AppBar from "@material-ui/core/AppBar";
@@ -36,7 +37,6 @@ export default function Menu(props: any) {
   const { loading, data, error } = useQuery(GET_SECTIONS);
   const itemsListQuery = useQuery(GET_ITEMS);
   const context = React.useContext(OrderContext);
-
   const cartItems = useQuery(GET_CART, {
     variables: {
       seatNo: context?.seatNo,
@@ -50,7 +50,8 @@ export default function Menu(props: any) {
     }
   }, [itemsListQuery.loading]);
 
-  React.useEffect(() => {
+  const setCart = () => {
+    context?.setItems("EMPTY");
     let _cartItems: CartItemType[] | undefined =
       cartItems.data?.cart[0]?.orderItems;
     let cartItemsList: OrderItemType[] = [];
@@ -58,27 +59,37 @@ export default function Menu(props: any) {
       let itemInfo = context?.itemsList?.find((item) => {
         return item._id === cartItem.itemId;
       });
-      let item: OrderItemType = {
-        itemId: itemInfo?._id || "",
-        name: itemInfo?.name || "",
-        price: itemInfo?.price || 0,
-        presetOptionId: itemInfo?.presetOptionId || [],
-        seatId: cartItem.seatId.map((seat) => seat),
-        cartItemId: cartItem.uniqueItemId,
-        options: cartItem?.options?.map((option) => {
-          let selectedOption = itemInfo?.options?.find(
-            (itemOption) => itemOption._id === option.optionId
-          );
-          return {
-            optionId: option.optionId,
-            price: selectedOption?.price,
-            name: selectedOption?.name,
-          };
-        }),
-      };
-      context?.setItems("ADD_ITEM", item);
+      if (itemInfo) {
+        let item: OrderItemType = {
+          itemId: itemInfo?._id || "",
+          name: itemInfo?.name || "",
+          price: itemInfo?.price || 0,
+          presetOptionId: itemInfo?.presetOptionId || [],
+          seatId: cartItem.seatId.map((seat) => seat),
+          cartItemId: cartItem.uniqueItemId,
+          options: cartItem?.options?.map((option) => {
+            let selectedOption = itemInfo?.options?.find(
+              (itemOption) => itemOption._id === option.optionId
+            );
+            return {
+              optionId: option.optionId,
+              price: selectedOption?.price,
+              name: selectedOption?.name,
+            };
+          }),
+        };
+        context?.setItems("ADD_ITEM", item);
+      }
     });
-  }, [cartItems.loading, cartItems.data, itemsListQuery.data]);
+  };
+
+  React.useEffect(setCart, [context?.itemsList]);
+
+  React.useEffect(setCart, [
+    cartItems.loading,
+    cartItems.data,
+    itemsListQuery.data,
+  ]);
 
   React.useEffect(() => {
     if (!loading && data) {
@@ -111,7 +122,7 @@ export default function Menu(props: any) {
   if (error) {
     return <p> Some error occurred </p>;
   }
-  console.log("FROM CONTEXT", context?.itemsList);
+
   return (
     <div id="menu-container">
       <div className={classes.root}>
@@ -125,7 +136,13 @@ export default function Menu(props: any) {
             aria-label="full width tabs example"
           >
             {sections.map((section: SectionType, index: number) => {
-              return <Tab label={section.name} {...a11yProps(index)} />;
+              return (
+                <Tab
+                  label={section.name}
+                  {...a11yProps(index)}
+                  style={{ minWidth: 50 }}
+                />
+              );
             })}
           </Tabs>
         </AppBar>

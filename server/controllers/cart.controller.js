@@ -40,14 +40,12 @@ const addToCart = async (uniqueTableId, tableId, orderItem) => {
 
 const removeFromCart = async (uniqueItemId, seatId) => {
   try {
-    console.log("SEAT CONTROLLER", seatId);
     let doc = await Cart.updateOne(
       {
         "orderItems.uniqueItemId": uniqueItemId,
       },
       { $pull: { "orderItems.$.seatId": seatId } }
     );
-    console.log("Doc", doc);
   } catch (err) {
     throw err;
   }
